@@ -1,0 +1,14 @@
+# Ignore Firebase service account key
+*.json
+
+# Ignore credentials and local configs
+config.properties
+backend/src/config.properties
+
+# Ignore system binaries and IDE folders
+apache-maven-3.9.6/
+jdk-17.0.10+7/
+.idea/
+*.iml
+target/
+backend/target/
