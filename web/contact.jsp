@@ -3,116 +3,231 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Contact Admin | LifeFlow</title>
+    <title>Support Center | LifeFlow Premium</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
-        body { padding-top: 0; }
-        .page-header { background: linear-gradient(135deg, rgba(15,23,42,1) 0%, rgba(15,23,42,0.85) 100%); padding: 4rem 0; color: white; text-align: center; }
-        .main-container { margin-top: 2rem; min-height: 40vh;}
-        /* Shared UI Snippets */
-        .top-header { background: #1e293b; color: white; padding: 10px 0; font-size: 0.9rem; }
-        .top-header .brand-logo-text { font-size: 1.2rem; font-weight: 800; display:flex; align-items:center; gap:8px;}
-        .top-header .brand-logo-text i { color: #e11d48; }
-        .top-header span { font-weight: 400; font-size: 0.85rem; color: #cbd5e1; }
-        .btn-outline-white { border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50px; font-weight: 600; font-size: 0.8rem; padding: 6px 16px; margin-left:10px;}
-        .btn-orange { background: var(--brand-orange); color: white; border-radius: 50px; font-weight: 600; font-size: 0.8rem; padding: 6px 16px;}
-        .navbar-custom { background: white !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); padding-top: 15px; padding-bottom: 15px;}
-        .navbar-custom .nav-link { font-weight: 600; font-size: 0.9rem; color: var(--brand-dark) !important; padding: 10px 20px !important; }
-        .navbar-custom .nav-link:hover { color: var(--brand-orange) !important; }
-        .donate-btn-nav { background: #fee2e2; color: #e11d48; font-weight: 700; border-radius: 50px; padding: 10px 25px; font-size: 0.9rem; border: 1px solid #fecaca; }
-        footer { background-color: var(--brand-dark); color: #a0a8b3; padding: 60px 0 20px 0; }
-        footer h5 { color: #fff; font-weight: 600; margin-bottom: 25px; }
-        footer ul { list-style: none; padding: 0; }
-        footer ul li { margin-bottom: 12px; }
-        footer ul li a { color: #a0a8b3; text-decoration: none; transition: 0.3s; }
-        footer ul li a:hover { color: var(--brand-orange); }
+        :root {
+            --brand-primary: #e11d48;
+            --brand-accent: #fb7185;
+            --brand-bg: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a 50%, #1e1b4b);
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Mesh Gradient Background Decor */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(225, 29, 72, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1, h2, h3, h4, .brand-text {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Standard Navbar */
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand-primary), #be123c);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 32px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-brand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4);
+            color: white;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            padding: 12px 18px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--brand-primary);
+            box-shadow: none;
+            color: white;
+        }
+
+        .text-visible-muted {
+            color: #94a3b8 !important;
+        }
+
+        .animate-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(225, 29, 72, 0.1);
+            color: var(--brand-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
     </style>
 </head>
 <body>
 
-<div class="top-header">
+<!-- Navigation -->
+<nav class="glass-nav">
     <div class="container d-flex justify-content-between align-items-center">
-        <div class="brand-logo-text">
-            <i class="fa-solid fa-heart-pulse"></i>
-            <div>LifeFlow <span>Premium Blood Bank Management</span></div>
+        <a class="d-flex align-items-center text-decoration-none" href="index.jsp">
+            <i class="fa-solid fa-heart-pulse text-brand-primary fs-3 me-2" style="color:var(--brand-primary)"></i>
+            <span class="brand-text fw-bold text-white fs-4">LifeFlow</span>
+        </a>
+        <div class="d-flex gap-3">
+            <a href="login.jsp" class="btn btn-outline-light rounded-pill px-4 border-opacity-25">Login</a>
+            <a href="register.jsp" class="btn btn-brand">Sign Up</a>
         </div>
-        <div class="d-flex align-items-center">
-            <a href="register.jsp" class="btn btn-orange"><i class="fa-solid fa-user"></i> REGISTER</a>
-            <a href="login.jsp" class="btn btn-outline-white"><i class="fa-solid fa-lock"></i> LOGIN</a>
-        </div>
-    </div>
-</div>
-
-<nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container d-flex justify-content-between">
-        <button class="navbar-toggler text-white bg-dark" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><i class="fa-solid fa-bars"></i></button>
-        <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="index.jsp">HOME</a></li>
-                <li class="nav-item"><a class="nav-link" href="findBloodBank.jsp">FIND BLOOD</a></li>
-                <li class="nav-item"><a class="nav-link" href="blog.jsp">BLOG</a></li>
-                <li class="nav-item"><a class="nav-link" href="register.jsp">DONATE BLOOD</a></li>
-                <li class="nav-item"><a class="nav-link" href="login.jsp">LOGIN</a></li>
-            </ul>
-        </div>
-        <a href="register.jsp" class="donate-btn-nav text-decoration-none">BECOME A DONOR</a>
     </div>
 </nav>
 
-<div class="page-header">
-    <div class="container fade-in-up">
-        <h1 class="display-4 fw-bold mb-3" style="font-family:'Poppins';">Support Center</h1>
-        <p class="lead text-white-50 mx-auto" style="max-width: 600px;">Need immediate assistance? Our admins are here to help.</p>
+<!-- Hero Section -->
+<section class="py-5">
+    <div class="container py-5 text-center">
+        <div class="animate-up">
+            <h1 class="display-3 fw-bold mb-4">Support <span style="color:var(--brand-primary)">Center</span></h1>
+            <p class="text-visible-muted fs-5 mx-auto" style="max-width: 600px;">
+                Have questions or need assistance? Our administration team is ready to help you save lives more effectively.
+            </p>
+        </div>
     </div>
-</div>
+</section>
 
-<main class="main-container container pb-5 text-center">
-    <h2 class="text-danger mt-5"><i class="fa-solid fa-headset"></i> Contact Form Offline</h2>
-    <p class="text-muted mt-3">Please use the internal portal via Dashboard to communicate directly with administrators.</p>
-</main>
-
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="brand-logo-text mb-3" style="font-size:1.5rem; font-weight:800; color:white;">
-                    <i class="fa-solid fa-heart-pulse text-danger"></i> LifeFlow <span style="font-size:0.9rem; font-weight:400; color:#ddd;">Premium Blood Bank</span>
-                </div>
-                <h4 class="text-white mt-4 fw-bold">Pioneering Health<br>Tech Solutions</h4>
+<!-- Main Content -->
+<section class="pb-5 mb-5 container">
+    <div class="row g-5">
+        <!-- Info Column -->
+        <div class="col-lg-4 animate-up" style="animation-delay: 0.1s;">
+            <div class="glass-card mb-4">
+                <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+                <h5 class="fw-bold">Email Us</h5>
+                <p class="text-visible-muted mb-0">lifeflowad@gmail.com</p>
+                <p class="text-visible-muted small">Response within 24 hours</p>
             </div>
-            <div class="col-md-2 col-6 mb-4">
-                <h5>Platform</h5>
-                <ul>
-                    <li><a href="index.jsp">Home</a></li>
-                    <li><a href="findBloodBank.jsp">Find Blood</a></li>
-                    <li><a href="login.jsp">Login</a></li>
-                    <li><a href="register.jsp">Register</a></li>
-                </ul>
+            <div class="glass-card mb-4">
+                <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+                <h5 class="fw-bold">Emergency Hotline</h5>
+                <p class="text-visible-muted mb-0">1800-LIFE-FLOW</p>
+                <p class="text-visible-muted small">Available 24/7 for urgent requests</p>
             </div>
-            <div class="col-md-2 col-6 mb-4">
-                <h5>Features</h5>
-                <ul>
-                    <li><a href="features.jsp">Instant Search</a></li>
-                    <li><a href="features.jsp">Stock Management</a></li>
-                    <li><a href="features.jsp">SMS Alerts</a></li>
-                    <li><a href="features.jsp">Firebase Realtime</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4 mb-4">
-                <h5>Support</h5>
-                <ul>
-                    <li><a href="contact.jsp">Contact Admin</a></li>
-                    <li><a href="privacy.jsp">Privacy Policy</a></li>
-                    <li><a href="terms.jsp">Terms of Service</a></li>
-                </ul>
+            <div class="glass-card">
+                <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <h5 class="fw-bold">Headquarters</h5>
+                <p class="text-visible-muted mb-0">Chennai, Tamil Nadu</p>
+                <p class="text-visible-muted small">South India Network Hub</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p class="mb-0">Copyright © 2026. Designed & Developed by <span style="color:var(--brand-orange)">Vj</span></p>
+
+        <!-- Form Column -->
+        <div class="col-lg-8 animate-up" style="animation-delay: 0.2s;">
+            <div class="glass-card">
+                <% 
+                    String success = (String) session.getAttribute("contactSuccess");
+                    String error = (String) session.getAttribute("contactError");
+                    if (success != null) { 
+                %>
+                    <div class="alert alert-success border-0 bg-success bg-opacity-10 text-success rounded-4 p-4 mb-4">
+                        <i class="fa-solid fa-circle-check me-2"></i> <%= success %>
+                    </div>
+                <% session.removeAttribute("contactSuccess"); } %>
+
+                <% if (error != null) { %>
+                    <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger rounded-4 p-4 mb-4">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i> <%= error %>
+                    </div>
+                <% session.removeAttribute("contactError"); } %>
+
+                <form action="${pageContext.request.contextPath}/ContactServlet" method="POST">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-visible-muted">FULL NAME</label>
+                            <input type="text" name="name" class="form-control" placeholder="John Doe" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-visible-muted">EMAIL ADDRESS</label>
+                            <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-visible-muted">HOW CAN WE HELP?</label>
+                            <textarea name="message" class="form-control" rows="6" placeholder="Describe your request or issue..." required></textarea>
+                        </div>
+                        <div class="col-12 mt-4 text-center">
+                            <button type="submit" class="btn btn-brand btn-lg px-5 w-100">Send Message</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5 border-top border-secondary border-opacity-10">
+    <div class="container text-center">
+        <p class="text-visible-muted small mb-0">© 2026 LifeFlow. Empowering the future of blood donation.</p>
     </div>
 </footer>
 

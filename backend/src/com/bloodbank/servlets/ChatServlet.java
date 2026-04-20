@@ -24,10 +24,31 @@ import java.net.URL;
 @WebServlet(name = "ChatServlet", urlPatterns = { "/api/chat" })
 public class ChatServlet extends HttpServlet {
 
-    // ⚠️ IMPORTANT: Get a free key from aistudio.google.com and paste it here!
-    private static final String GEMINI_API_KEY = "AIzaSyAYWLPTNKJDDOf2SUFOFL1HKLiojI2WAb4";
-    // 🚀 Using stable v1 API and Flash model
-    private static final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY;
+    private static String GEMINI_API_KEY = "AIzaSyAYWLPTNKJDDOf2SUFOFL1HKLiojI2WAb4";
+    private static String GEMINI_MODEL = "gemini-1.5-flash";
+    
+    static {
+        java.util.Properties props = new java.util.Properties();
+        java.io.File configFile = new java.io.File("backend/ai_config.properties");
+        if (!configFile.exists()) configFile = new java.io.File("ai_config.properties");
+        
+        if (configFile.exists()) {
+            try (java.io.FileInputStream fis = new java.io.FileInputStream(configFile)) {
+                props.load(fis);
+                String key = props.getProperty("gemini.api.key");
+                if (key != null && !key.trim().isEmpty()) GEMINI_API_KEY = key;
+                String model = props.getProperty("ai.model");
+                if (model != null && !model.trim().isEmpty()) GEMINI_MODEL = model;
+                System.out.println("🤖 AI CHAT: Config loaded from " + configFile.getAbsolutePath());
+            } catch (java.io.IOException e) {
+                System.err.println("🤖 AI CHAT: Config load error: " + e.getMessage());
+            }
+        }
+    }
+
+    private static String getGeminiUrl() {
+        return "https://generativelanguage.googleapis.com/v1beta/models/" + GEMINI_MODEL + ":generateContent?key=" + GEMINI_API_KEY;
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -67,16 +88,23 @@ public class ChatServlet extends HttpServlet {
 
             QuerySnapshot emergencies = db.collection("emergency_alerts").get().get();
             if (!emergencies.isEmpty()) {
-                contextBuilder.append("Active Emergencies Found. ");
+                contextBuilder.append("Number of Active Emergency Alerts: ").append(emergencies.size()).append(". ");
             }
+            
+            // Add Platform Stats for smarter answers
+            long countDonors = db.collection("users").whereEqualTo("role", "DONOR").get().get().size();
+            long countBanks = db.collection("blood_banks").get().get().size();
+            contextBuilder.append("Total Registered Donors: ").append(countDonors).append(". ");
+            contextBuilder.append("Total Partnered Blood Banks: ").append(countBanks).append(". ");
+            
         } catch (Exception e) {
             System.err.println("🤖 AI CHAT: Context loading warning: " + e.getMessage());
         }
 
         try {
             // Attempt Gemini API Call
-            System.out.println("🤖 AI CHAT: [Phase 1] Attempting Gemini API (v1 Flash)...");
-            URL url = new URL(GEMINI_URL);
+            System.out.println("🤖 AI CHAT: [Phase 1] Attempting Gemini API using key: " + GEMINI_API_KEY.substring(0, 8) + "...");
+            URL url = new URL(getGeminiUrl());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");

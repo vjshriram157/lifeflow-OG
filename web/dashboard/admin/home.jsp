@@ -25,6 +25,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
+<link href="<%=request.getContextPath()%>/assets/css/overrides_v3.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
@@ -40,6 +41,7 @@
             <li><a href="emergencyBroadcast.jsp" class="nav-link"><i class="fa-solid fa-tower-broadcast"></i> Emergencies</a></li>
             <li><a href="analytics.jsp" class="nav-link"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
             <li><a href="adminDirectory.jsp" class="nav-link"><i class="fa-solid fa-address-book"></i> User Directory</a></li>
+            <li><a href="blogCMS.jsp" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Content Management</a></li>
         <div class="mt-auto pt-5 pb-3">
             <a href="<%=request.getContextPath()%>/LogoutServlet" class="btn btn-outline-light btn-sm w-100 rounded-pill"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out</a>
         </div>
@@ -237,7 +239,7 @@
                             <a href="emergencyBroadcast.jsp" class="btn btn-outline-light fw-bold rounded-pill p-3 text-start">
                                 <i class="fa-solid fa-satellite-dish me-2"></i> Broadcast Emergency Alert
                             </a>
-                            <a href="<%=request.getContextPath()%>/ExportReport" class="btn btn-outline-light fw-bold rounded-pill p-3 text-start">
+                            <a href="<%=request.getContextPath()%>/ExportReport.xlsx" class="btn btn-outline-light fw-bold rounded-pill p-3 text-start">
                                 <i class="fa-solid fa-file-csv me-2"></i> Export System Report
                             </a>
                         </div>

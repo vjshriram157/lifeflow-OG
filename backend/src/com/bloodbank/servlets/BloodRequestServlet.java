@@ -170,6 +170,20 @@ public class BloodRequestServlet extends HttpServlet {
                 if (data == null) continue;
                 JSONObject obj = new JSONObject(data);
                 obj.put("id", doc.getId());
+                
+                // Fetch Requester Name from users collection
+                String reqId = (String) data.get("requester_id");
+                if (reqId != null) {
+                    try {
+                        com.google.cloud.firestore.DocumentSnapshot userDoc = db.collection("users").document(reqId).get().get();
+                        if (userDoc.exists()) {
+                            obj.put("full_name", userDoc.getString("full_name"));
+                        }
+                    } catch (Exception e) {
+                        System.err.println("User fetch failed for " + reqId + " : " + e.getMessage());
+                    }
+                }
+                
                 arr.put(obj);
             }
 

@@ -114,6 +114,16 @@
         <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- ================= CONTACT ================= -->
+    <servlet>
+        <servlet-name>ContactServlet</servlet-name>
+        <servlet-class>com.bloodbank.servlets.ContactServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ContactServlet</servlet-name>
+        <url-pattern>/ContactServlet</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>ResetPasswordServlet</servlet-name>
         <servlet-class>com.bloodbank.servlets.ResetPasswordServlet</servlet-class>
@@ -158,7 +168,17 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ExportReportServlet</servlet-name>
-        <url-pattern>/ExportReport</url-pattern>
+        <url-pattern>/ExportReport.xlsx</url-pattern>
+    </servlet-mapping>
+
+    <!-- ================= NEWSLETTER ================= -->
+    <servlet>
+        <servlet-name>NewsletterServlet</servlet-name>
+        <servlet-class>com.bloodbank.servlets.NewsletterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NewsletterServlet</servlet-name>
+        <url-pattern>/NewsletterServlet</url-pattern>
     </servlet-mapping>
 
     <!-- ================= WELCOME ================= -->
@@ -166,5 +186,29 @@
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
+    <!-- ================= BLOG CMS ================= -->
+    <servlet>
+        <servlet-name>BlogManagementServlet</servlet-name>
+        <servlet-class>com.bloodbank.servlets.BlogManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BlogManagementServlet</servlet-name>
+        <url-pattern>/api/admin/blogs</url-pattern>
+    </servlet-mapping>
+
+    <!-- ================= ERROR HANDLING ================= -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error.jsp</location>
+    </error-page>
 
 </web-app>

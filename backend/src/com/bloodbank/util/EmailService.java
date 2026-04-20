@@ -237,6 +237,8 @@ public class EmailService {
             System.err.println("❌ Failed to broadcast peer emergency email.");
             e.printStackTrace();
         }
+    }
+
     public static void notifyAdminOfNewPendingApproval(String userName, String userEmail, String role) {
         System.out.println("Notifying Admin of new pending approval: " + userEmail);
         
@@ -277,8 +279,9 @@ public class EmailService {
                 + "</div>"
                 + "<p style='line-height: 1.6;'>No immediate action is required by the administrator, but you may want to monitor the local supply or coordinate with nearby banks if needed.</p>"
                 + "</div>";
-
         sendRawEmail(USERNAME, "SYSTEM ALERT: " + requesterType + " Emergency Broadcast (" + bloodGroup + ")", htmlBody);
+    }
+
     public static void sendBookingConfirmation(String toAddress, String bankName, String appointmentTime) {
         System.out.println("Sending booking confirmation to: " + toAddress);
         
@@ -315,5 +318,23 @@ public class EmailService {
                 + "</div>";
 
         sendRawEmail(toAddress, "LifeFlow - Thank You for Your Life-Saving Gift", htmlBody);
+    }
+
+    public static void notifyAdminOfContactMessage(String name, String email, String message) {
+        System.out.println("Notifying Admin of new contact form message from: " + email);
+        
+        String htmlBody = "<div style='font-family: Arial, sans-serif; padding: 30px; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-top: 5px solid #e11d48; border-radius: 8px;'>"
+                + "<div style='text-align: center; margin-bottom: 20px;'>"
+                + "  <h1 style='color: #e11d48; margin: 0;'>New Contact Message</h1>"
+                + "  <p style='color: #666; font-size: 1.1em; margin-top: 5px;'>A visitor has sent a support request.</p>"
+                + "</div>"
+                + "<div style='background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin: 25px 0;'>"
+                + "  <p style='margin: 0;'><strong>From:</strong> " + name + " (" + email + ")</p>"
+                + "  <p style='margin: 15px 0 0 0; line-height: 1.6;'><strong>Message:</strong><br>" + message + "</p>"
+                + "</div>"
+                + "<p style='font-size: 0.8em; color: #999; margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; text-align: center;'>Please respond to this request as soon as possible via the registered email.</p>"
+                + "</div>";
+
+        sendRawEmail(USERNAME, "LifeFlow Support Request: New Message from " + name, htmlBody);
     }
 }

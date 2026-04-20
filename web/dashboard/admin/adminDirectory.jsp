@@ -18,6 +18,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/assets/css/overrides_v3.css" rel="stylesheet">
+    <style>
+        .btn-premium {
+            background: linear-gradient(135deg, #e11d48, #9f1239) !important;
+            color: #fff !important;
+            border: none !important;
+        }
+        .btn-premium:hover, .btn-premium:focus { color: #fff !important; }
+    </style>
 </head>
 
 <body>
@@ -34,6 +43,7 @@
             <li><a href="<%=request.getContextPath()%>/dashboard/admin/emergencyBroadcast.jsp" class="nav-link"><i class="fa-solid fa-tower-broadcast"></i> Emergencies</a></li>
             <li><a href="<%=request.getContextPath()%>/dashboard/admin/analytics.jsp" class="nav-link"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
             <li><a href="<%=request.getContextPath()%>/dashboard/admin/adminDirectory.jsp" class="nav-link active"><i class="fa-solid fa-address-book"></i> User Directory</a></li>
+            <li><a href="blogCMS.jsp" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Content Management</a></li>
         </ul>
         <div class="mt-auto pt-5 pb-3">
             <a href="<%=request.getContextPath()%>/LogoutServlet" class="btn btn-outline-light btn-sm w-100 rounded-pill"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out</a>

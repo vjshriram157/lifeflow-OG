@@ -94,26 +94,37 @@ public class EmergencyNotificationServlet extends HttpServlet {
                 for (QueryDocumentSnapshot userDoc : usersSnapshot.getDocuments()) {
                     String userId = userDoc.getId();
                     String userEmail = userDoc.getString("email");
+                    String userCity = userDoc.getString("city");
+                    boolean eligible = false;
 
-                    // Check device token
+                    // A) Location Check (Coordinates or City)
                     DocumentSnapshot tokenDoc = db.collection("device_tokens").document(userId).get().get();
-                    if (!tokenDoc.exists()) continue;
+                    Double devLat = null, devLng = null;
+                    if (tokenDoc.exists()) {
+                        devLat = tokenDoc.getDouble("last_latitude");
+                        devLng = tokenDoc.getDouble("last_longitude");
+                    }
 
-                    Double devLat = tokenDoc.getDouble("last_latitude");
-                    Double devLng = tokenDoc.getDouble("last_longitude");
-                    if (devLat == null || devLng == null) continue;
+                    if (devLat != null && devLng != null) {
+                        // Haversine distance
+                        double dLat = Math.toRadians(devLat - bankLat);
+                        double dLng = Math.toRadians(devLng - bankLng);
+                        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                                Math.cos(Math.toRadians(bankLat)) * Math.cos(Math.toRadians(devLat)) *
+                                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        double distanceKm = 6371 * c;
+                        
+                        if (distanceKm <= radiusKm) {
+                            eligible = true;
+                        }
+                    } else if (userCity != null && userCity.equalsIgnoreCase(bankDoc.getString("city"))) {
+                        // Fallback: Notify anyone in the same city if coordinates are unavailable
+                        eligible = true;
+                    }
 
-                    // Calculate Haversine distance
-                    double dLat = Math.toRadians(devLat - bankLat);
-                    double dLng = Math.toRadians(devLng - bankLng);
-                    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                            Math.cos(Math.toRadians(bankLat)) * Math.cos(Math.toRadians(devLat)) *
-                            Math.sin(dLng / 2) * Math.sin(dLng / 2);
-                    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                    double distanceKm = 6371 * c;
-
-                    if (distanceKm <= radiusKm) {
-                        // Check appointments
+                    if (eligible) {
+                        // Check donation wait period (3 months)
                         QuerySnapshot apptSnapshot = db.collection("appointments")
                                 .whereEqualTo("donor_id", userId)
                                 .whereEqualTo("status", "COMPLETED")
@@ -134,18 +145,22 @@ public class EmergencyNotificationServlet extends HttpServlet {
                         }
 
                         if (!hasRecent) {
-                            String token = tokenDoc.getString("device_token");
-                            if (token != null && !token.isEmpty()) {
-                                JSONObject dev = new JSONObject();
-                                dev.put("userId", userId);
-                                dev.put("deviceToken", token);
-                                dev.put("platform", tokenDoc.getString("platform"));
-                                dev.put("distanceKm", distanceKm);
-                                notifiedDevices.put(dev);
-                                fcmTokens.add(token);
-                            }
+                            // Collect for Email
                             if (userEmail != null && !userEmail.isEmpty()) {
                                 donorEmails.add(userEmail);
+                            }
+                            
+                            // Collect for FCM if token exists
+                            if (tokenDoc.exists()) {
+                                String token = tokenDoc.getString("device_token");
+                                if (token != null && !token.isEmpty()) {
+                                    JSONObject dev = new JSONObject();
+                                    dev.put("userId", userId);
+                                    dev.put("deviceToken", token);
+                                    dev.put("platform", tokenDoc.getString("platform"));
+                                    notifiedDevices.put(dev);
+                                    fcmTokens.add(token);
+                                }
                             }
                         }
                     }

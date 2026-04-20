@@ -34,6 +34,7 @@
             <li><a href="<%=request.getContextPath()%>/dashboard/admin/emergencyBroadcast.jsp" class="nav-link"><i class="fa-solid fa-tower-broadcast"></i> Emergencies</a></li>
             <li><a href="<%=request.getContextPath()%>/dashboard/admin/analytics.jsp" class="nav-link"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
             <li><a href="<%=request.getContextPath()%>/dashboard/admin/adminDirectory.jsp" class="nav-link"><i class="fa-solid fa-address-book"></i> User Directory</a></li>
+            <li><a href="<%=request.getContextPath()%>/dashboard/admin/blogCMS.jsp" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Content Management</a></li>
         </ul>
         <div class="mt-auto pt-5 pb-3">
             <a href="<%=request.getContextPath()%>/LogoutServlet" class="btn btn-outline-light btn-sm w-100 rounded-pill"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out</a>

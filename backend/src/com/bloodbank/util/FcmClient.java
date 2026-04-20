@@ -19,7 +19,29 @@ import java.util.List;
 public class FcmClient {
 
     private static final String FCM_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
-    private static final String SERVER_KEY = "REPLACE_WITH_YOUR_FCM_SERVER_KEY";
+    private static String SERVER_KEY;
+
+    static {
+        loadConfig();
+    }
+
+    private static void loadConfig() {
+        try (java.io.InputStream input = FcmClient.class.getClassLoader().getResourceAsStream("config.properties")) {
+            java.util.Properties prop = new java.util.Properties();
+            if (input == null) {
+                try (java.io.FileInputStream fis = new java.io.FileInputStream("c:\\Users\\vijay\\OneDrive\\Desktop\\lifeflow-OG-main\\backend\\src\\config.properties")) {
+                    prop.load(fis);
+                }
+            } else {
+                prop.load(input);
+            }
+            SERVER_KEY = prop.getProperty("fcm.server.key", "REPLACE_WITH_YOUR_ACTUAL_FCM_KEY");
+            System.out.println("📱 FCM configurations loaded successfully.");
+        } catch (Exception ex) {
+            System.err.println("❌ Unable to find config.properties for FCM.");
+            SERVER_KEY = "REPLACE_WITH_YOUR_ACTUAL_FCM_KEY";
+        }
+    }
 
     public static void sendEmergencyAlertToDevices(List<String> tokens,
                                                    String title,

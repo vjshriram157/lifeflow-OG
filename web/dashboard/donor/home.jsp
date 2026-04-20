@@ -11,15 +11,37 @@
     // Fetch user details for filtering requests
     String userBloodGroup = "";
     String userCity = "";
+    Long impactScore = 0L;
+    Long donationCount = 0L;
+    
     try {
         Firestore db = FirebaseConfig.getFirestore();
         DocumentSnapshot userDoc = db.collection("users").document(userId).get().get();
         if (userDoc.exists()) {
             userBloodGroup = userDoc.getString("blood_group");
             userCity = userDoc.getString("city");
+            
+            Long iscore = userDoc.getLong("impact_score");
+            if (iscore != null) impactScore = iscore;
+            
+            Long dcount = userDoc.getLong("donation_count");
+            if (dcount != null) donationCount = dcount;
         }
     } catch (Exception e) {
         e.printStackTrace();
+    }
+    
+    String rankBadge = "Bronze Lifesaver";
+    String rankColor = "#b45309";
+    String rankIcon = "fa-medal";
+    if (impactScore >= 250) {
+        rankBadge = "Gold Hero";
+        rankColor = "#fbbf24";
+        rankIcon = "fa-trophy";
+    } else if (impactScore >= 100) {
+        rankBadge = "Silver Guardian";
+        rankColor = "#94a3b8";
+        rankIcon = "fa-star";
     }
 %>
 <!DOCTYPE html>
@@ -31,6 +53,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/assets/css/overrides_v3.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
@@ -61,6 +84,44 @@
             <a href="<%= request.getContextPath() %>/BookAppointmentServlet" class="btn btn-premium rounded-pill px-4 shadow-sm">
                 <i class="fa-solid fa-heart-pulse me-2"></i> Book Appointment
             </a>
+        </div>
+
+        <!-- 🏆 Gamification Engine UI -->
+        <div class="row g-4 mb-5 fade-in-up delay-100">
+            <div class="col-md-4">
+                <div class="card card-modern border-0 shadow-sm bg-white h-100 position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                        <i class="fa-solid fa-heart-pulse text-danger" style="font-size: 6rem; margin-right:-20px; margin-top:-20px;"></i>
+                    </div>
+                    <div class="card-body p-4 position-relative z-1">
+                        <h6 class="text-muted fw-bold text-uppercase mb-3" style="letter-spacing: 1px;">Total Donations</h6>
+                        <h2 class="display-5 fw-bold text-dark mb-0"><%= donationCount %></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-modern border-0 bg-danger text-white h-100 position-relative overflow-hidden" style="box-shadow: 0 10px 30px rgba(225, 29, 72, 0.3);">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                        <i class="fa-solid fa-bolt text-white" style="font-size: 6rem; margin-right:-20px; margin-top:-20px;"></i>
+                    </div>
+                    <div class="card-body p-4 position-relative z-1">
+                        <h6 class="text-white-50 fw-bold text-uppercase mb-3" style="letter-spacing: 1px;">Impact Score</h6>
+                        <h2 class="display-5 fw-bold mb-0"><%= impactScore %> <span class="fs-5 text-white-50">Pts</span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-modern border-0 shadow-sm bg-white h-100 position-relative overflow-hidden" style="border-left: 5px solid <%=rankColor%> !important;">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                        <i class="fa-solid <%=rankIcon%>" style="font-size: 6rem; color: <%=rankColor%>; margin-right:-20px; margin-top:-20px;"></i>
+                    </div>
+                    <div class="card-body p-4 position-relative z-1">
+                        <h6 class="text-muted fw-bold text-uppercase mb-3" style="letter-spacing: 1px;">Current Rank</h6>
+                        <h3 class="fw-bold mb-2" style="color: <%=rankColor%>; font-family: 'Outfit', sans-serif;"><%= rankBadge %></h3>
+                        <p class="small text-muted mb-0"><a href="<%=request.getContextPath()%>/leaderboard.jsp" class="text-decoration-none">Network Leaderboard &rarr;</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card card-modern border-warning border-2 fade-in-up delay-100 mb-4 bg-light">

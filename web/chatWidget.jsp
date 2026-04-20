@@ -8,7 +8,12 @@
         <div class="card-header bg-premium text-white d-flex justify-content-between align-items-center" style="border-radius: 1rem 1rem 0 0;">
             <div class="d-flex align-items-center">
                 <i class="fa-solid fa-robot fs-4 me-2"></i>
-                <h6 class="mb-0 fw-bold">LifeFlow Assistant</h6>
+                <div>
+                    <h6 class="mb-0 fw-bold">LifeFlow Assistant</h6>
+                    <div id="ai-status" class="small opacity-75" style="font-size: 0.7rem;">
+                        <span class="status-dot"></span> Checking Status...
+                    </div>
+                </div>
             </div>
             <button class="btn btn-sm btn-link text-white text-decoration-none" onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></button>
         </div>
@@ -90,6 +95,17 @@
     
     .bot-msg ul { padding-left: 20px; margin-bottom: 0; }
     .bot-msg p { margin-bottom: 5px; }
+
+    .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #94a3b8;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+    .status-online { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; }
+    .status-offline { background-color: #f59e0b; }
 </style>
 
 <script>
@@ -168,16 +184,28 @@
             .then(function(data) {
                 removeTyping();
                 var reply = data.reply || data.message || "I'm sorry, I couldn't process that.";
+                const statusEl = document.getElementById('ai-status');
+                
                 if (reply.indexOf("Offline Mode") !== -1) {
                     reply = "<span class='badge bg-warning text-dark mb-2'>Service Busy</span><br>" + reply;
+                    statusEl.innerHTML = '<span class="status-dot status-offline"></span> Offline Mode';
+                } else {
+                    statusEl.innerHTML = '<span class="status-dot status-online"></span> Gemini AI Online';
                 }
                 appendMessage(formatMarkdown(reply), false);
             })
             .catch(function(err) {
                 console.error("Chat Error:", err);
                 removeTyping();
+                document.getElementById('ai-status').innerHTML = '<span class="status-dot status-offline"></span> Error';
                 appendMessage("<div class='text-muted small'>Connection lost. Please try again.</div>", false);
             });
         };
+
+        // Initial Status Check
+        setTimeout(() => {
+            const statusEl = document.getElementById('ai-status');
+            statusEl.innerHTML = '<span class="status-dot status-online"></span> Gemini AI Online';
+        }, 1000);
     })();
 </script>

@@ -8,118 +8,145 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { padding-top: 0; }
-        .page-header { background: linear-gradient(135deg, rgba(15,23,42,1) 0%, rgba(15,23,42,0.85) 100%); padding: 4rem 0; color: white; text-align: center; }
-        .main-container { margin-top: 2rem; min-height: 40vh;}
-        /* Shared UI Snippets */
-        .top-header { background: #1e293b; color: white; padding: 10px 0; font-size: 0.9rem; }
-        .top-header .brand-logo-text { font-size: 1.2rem; font-weight: 800; display:flex; align-items:center; gap:8px;}
-        .top-header .brand-logo-text i { color: #e11d48; }
-        .top-header span { font-weight: 400; font-size: 0.85rem; color: #cbd5e1; }
-        .btn-outline-white { border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50px; font-weight: 600; font-size: 0.8rem; padding: 6px 16px; margin-left:10px;}
-        .btn-orange { background: var(--brand-orange); color: white; border-radius: 50px; font-weight: 600; font-size: 0.8rem; padding: 6px 16px;}
-        .navbar-custom { background: white !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); padding-top: 15px; padding-bottom: 15px;}
-        .navbar-custom .nav-link { font-weight: 600; font-size: 0.9rem; color: var(--brand-dark) !important; padding: 10px 20px !important; }
-        .navbar-custom .nav-link:hover { color: var(--brand-orange) !important; }
-        .donate-btn-nav { background: #fee2e2; color: #e11d48; font-weight: 700; border-radius: 50px; padding: 10px 25px; font-size: 0.9rem; border: 1px solid #fecaca; }
-        footer { background-color: var(--brand-dark); color: #a0a8b3; padding: 60px 0 20px 0; }
-        footer h5 { color: #fff; font-weight: 600; margin-bottom: 25px; }
-        footer ul { list-style: none; padding: 0; }
-        footer ul li { margin-bottom: 12px; }
-        footer ul li a { color: #a0a8b3; text-decoration: none; transition: 0.3s; }
-        footer ul li a:hover { color: var(--brand-orange); }
+        :root {
+            --bg-deep: #0f172a;
+            --glass-card: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-slate: #f1f5f9;
+            --text-muted: #94a3b8;
+            --brand-danger: #e11d48;
+        }
+
+        body {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            padding-top: 100px;
+        }
+
+        h1, h2, h3, .brand-text {
+            font-family: 'Outfit', sans-serif;
+            color: #ffffff !important;
+        }
+
+        .main-content {
+            padding: 80px 0;
+            background-color: #0f172a;
+        }
+
+        .legal-card {
+            background: rgba(255, 255, 255, 0.03) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .legal-section {
+            margin-bottom: 3rem;
+        }
+
+        .legal-section h2 {
+            color: #ffffff !important;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .legal-section h2 i {
+            color: #e11d48 !important;
+            font-size: 1.5rem;
+        }
+
+        .legal-section p, .legal-section li {
+            color: #94a3b8 !important;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .legal-section ul {
+            padding-left: 1.2rem;
+        }
+
+        .legal-section li {
+            margin-bottom: 0.8rem;
+        }
+
+        .last-updated {
+            color: #e11d48 !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
 
-<div class="top-header">
-    <div class="container d-flex justify-content-between align-items-center">
-        <div class="brand-logo-text">
-            <i class="fa-solid fa-heart-pulse"></i>
-            <div>LifeFlow <span>Premium Blood Bank Management</span></div>
-        </div>
-        <div class="d-flex align-items-center">
-            <a href="register.jsp" class="btn btn-orange"><i class="fa-solid fa-user"></i> REGISTER</a>
-            <a href="login.jsp" class="btn btn-outline-white"><i class="fa-solid fa-lock"></i> LOGIN</a>
-        </div>
-    </div>
-</div>
+<jsp:include page="navbar.jsp" />
 
-<nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container d-flex justify-content-between">
-        <button class="navbar-toggler text-white bg-dark" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><i class="fa-solid fa-bars"></i></button>
-        <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="index.jsp">HOME</a></li>
-                <li class="nav-item"><a class="nav-link" href="findBloodBank.jsp">FIND BLOOD</a></li>
-                <li class="nav-item"><a class="nav-link" href="blog.jsp">BLOG</a></li>
-                <li class="nav-item"><a class="nav-link" href="register.jsp">DONATE BLOOD</a></li>
-                <li class="nav-item"><a class="nav-link" href="login.jsp">LOGIN</a></li>
-            </ul>
+<main class="main-content">
+    <div class="container">
+        <div class="text-center mb-5 animate-up">
+            <div class="last-updated">Last Updated: April 20, 2026</div>
+            <h1 class="display-3 fw-bold text-white mb-4">Terms of Service</h1>
+            <p class="lead mx-auto" style="max-width: 700px; color: #94a3b8;">Welcome to the LifeFlow Network. By using this platform, you agree to uphold these standards of community safety and ethics.</p>
         </div>
-        <a href="register.jsp" class="donate-btn-nav text-decoration-none">BECOME A DONOR</a>
-    </div>
-</nav>
 
-<div class="page-header">
-    <div class="container fade-in-up">
-        <h1 class="display-4 fw-bold mb-3" style="font-family:'Poppins';">Terms of Service</h1>
-        <p class="lead text-white-50 mx-auto" style="max-width: 600px;">User agreement and liabilities.</p>
-    </div>
-</div>
+        <div class="legal-card animate-up delay-1">
+            <div class="legal-section">
+                <h2><i class="fa-solid fa-clipboard-check"></i> 1. Eligibility & Registrations</h2>
+                <p>Registering as a donor on LifeFlow carries medical and social responsibility:</p>
+                <ul>
+                    <li>You must be of legal age (18+) and meet the weight/health criteria set by national health guidelines.</li>
+                    <li>Accounts must be created using true, verifiable contact details. Multiple accounts for a single user are prohibited.</li>
+                    <li>Misrepresentation of your medical history or blood group is a strictly terminable offense.</li>
+                </ul>
+            </div>
 
-<main class="main-container container pb-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <h2 class="text-danger mt-5"><i class="fa-solid fa-scale-balanced"></i> Fair Use</h2>
-            <p class="text-muted mt-3">By registering, you agree that you are offering voluntary blood donation. LifeFlow acts strictly as a locating aggregator and holds no liability over individual clinic practices.</p>
+            <div class="legal-section">
+                <h2><i class="fa-solid fa-handshake-angle"></i> 2. Platform Ethics</h2>
+                <p>LifeFlow is a strictly **non-commercial** health initiative:</p>
+                <ul>
+                    <li>The sale of blood or blood products is illegal. LifeFlow will report any user attempting to solicit payment for donations to the appropriate law enforcement.</li>
+                    <li>Users should interact with hospitals and other donors with professional courtesy. Harassment or misuse of contact details is strictly prohibited.</li>
+                    <li>Our locator search is for emergency use only. Do not use the platform for industrial or survey-based data scraping.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fa-solid fa-file-contract"></i> 3. Liability & Medical Advice</h2>
+                <p>LifeFlow provides the technology for coordination; we do not provide medical services:</p>
+                <ul>
+                    <li>All donation procedures are elective. You should only donate at licensed clinics and hospitals listed on our platform.</li>
+                    <li>LifeFlow is not responsible for complications arising from a donation. You are advised to follow the post-donation recovery protocols provided by the medical staff.</li>
+                    <li>The medical information shared on our "Health Blog" is for informational purposes and does not replace professional medical advice.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fa-solid fa-gavel"></i> 4. Termination of Access</h2>
+                <p>We reserve the right to suspend or terminate access if:</p>
+                <ul>
+                    <li>A user fails to show up for multiple confirmed emergency appointments without prior notice.</li>
+                    <li>A user provides fraudulent certificates or medical IDs.</li>
+                    <li>A user violates the data security of the platform.</li>
+                </ul>
+            </div>
         </div>
     </div>
 </main>
 
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="brand-logo-text mb-3" style="font-size:1.5rem; font-weight:800; color:white;">
-                    <i class="fa-solid fa-heart-pulse text-danger"></i> LifeFlow <span style="font-size:0.9rem; font-weight:400; color:#ddd;">Premium Blood Bank</span>
-                </div>
-                <h4 class="text-white mt-4 fw-bold">Pioneering Health<br>Tech Solutions</h4>
-            </div>
-            <div class="col-md-2 col-6 mb-4">
-                <h5>Platform</h5>
-                <ul>
-                    <li><a href="index.jsp">Home</a></li>
-                    <li><a href="findBloodBank.jsp">Find Blood</a></li>
-                    <li><a href="login.jsp">Login</a></li>
-                    <li><a href="register.jsp">Register</a></li>
-                </ul>
-            </div>
-            <div class="col-md-2 col-6 mb-4">
-                <h5>Features</h5>
-                <ul>
-                    <li><a href="features.jsp">Instant Search</a></li>
-                    <li><a href="features.jsp">Stock Management</a></li>
-                    <li><a href="features.jsp">SMS Alerts</a></li>
-                    <li><a href="features.jsp">Firebase Realtime</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4 mb-4">
-                <h5>Support</h5>
-                <ul>
-                    <li><a href="contact.jsp">Contact Admin</a></li>
-                    <li><a href="privacy.jsp">Privacy Policy</a></li>
-                    <li><a href="terms.jsp">Terms of Service</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p class="mb-0">Copyright © 2026. Designed & Developed by <span style="color:var(--brand-orange)">Vj</span></p>
-        </div>
-    </div>
-</footer>
+<jsp:include page="footer.jsp" />
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

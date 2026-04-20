@@ -16,6 +16,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/assets/css/overrides_v3.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
@@ -31,6 +32,7 @@
             <li><a href="emergencyBroadcast.jsp" class="nav-link active"><i class="fa-solid fa-tower-broadcast"></i> Emergencies</a></li>
             <li><a href="analytics.jsp" class="nav-link"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
             <li><a href="adminDirectory.jsp" class="nav-link"><i class="fa-solid fa-address-book"></i> User Directory</a></li>
+            <li><a href="blogCMS.jsp" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Content Management</a></li>
         </ul>
         <div class="mt-auto pt-5 pb-3">
             <a href="<%=request.getContextPath()%>/LogoutServlet" class="btn btn-outline-light btn-sm w-100 rounded-pill"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out</a>
@@ -105,9 +107,10 @@
                                     </h5>
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-premium btn-sm rounded-pill px-4 fw-bold shadow-sm"
-                                            onclick="sendBroadcast('<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
-                                        <i class="fa-solid fa-podcast me-1"></i> Dispatch Request
+                                    <button class="btn btn-sm rounded-pill px-4 fw-bold shadow-sm"
+                                            style="background: linear-gradient(135deg, #e11d48, #9f1239); color: #fff; border: none;"
+                                            onclick="sendBroadcast(this, '<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
+                                        <i class="fa-solid fa-podcast me-1"></i> Dispatch Alert
                                     </button>
                                 </td>
                             </tr>
@@ -146,8 +149,8 @@
                                     <span class="small text-dark"><em>"<%= msg != null ? msg : "Urgent request." %>"</em></span>
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold"
-                                            onclick="sendBroadcast('<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
+                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold bg-white"
+                                            onclick="sendBroadcast(this, '<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
                                         <i class="fa-solid fa-podcast me-1"></i> Push Again
                                     </button>
                                 </td>
@@ -179,12 +182,11 @@
 </div>
 
 <script>
-    function sendBroadcast(bankId, bankName, bloodGroup) {
+    function sendBroadcast(btn, bankId, bankName, bloodGroup) {
         if (!confirm("Dispatch high-priority push notification for " + bloodGroup + " donors near " + bankName + "?")) {
             return;
         }
 
-        const btn = event.currentTarget;
         const originalHtml = btn.innerHTML;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Dispatching...';
         btn.disabled = true;
@@ -199,17 +201,20 @@
             body: formData,
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
-        .then(response => response.json().then(data => ({ status: response.status, body: data })))
-        .then(res => {
-            if (res.status === 200) {
-                alert("Success!\nAlert ID: " + res.body.alertId + "\nDonors Notified: " + res.body.notifiedCount);
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null;
+
+            if (response.ok) {
+                alert("✅ SUCCESS: Dispatch operation completed.\n\nAlert ID: " + (data.alertId || "N/A") + "\nDonors Notified: " + (data.notifiedCount || 0));
+                // Optional: window.location.reload(); 
             } else {
-                alert("Error: " + (res.body.error || "Failed to dispatch request"));
+                throw new Error(data?.error || "Server returned status " + response.status);
             }
         })
         .catch(err => {
-            alert("Network error: Could not connect to dispatch server.");
-            console.error(err);
+            alert("❌ DISPATCH FAILED: " + err.message);
+            console.error("Dispatch Error:", err);
         })
         .finally(() => {
             btn.innerHTML = originalHtml;

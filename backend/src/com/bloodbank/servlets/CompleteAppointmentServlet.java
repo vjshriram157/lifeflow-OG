@@ -4,6 +4,7 @@ import com.bloodbank.util.FirebaseConfig;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QuerySnapshot;
 
 import javax.servlet.ServletException;
@@ -65,7 +66,7 @@ public class CompleteAppointmentServlet extends HttpServlet {
             if (apptDoc.exists() && bankId.equals(apptDoc.getString("bank_id"))) {
                 db.collection("appointments").document(appointmentId).update("status", "COMPLETED").get();
                 
-                // 📧 Automated Thank You Email
+                // 📧 Automated Thank You Email & 🏆 Gamification Scoring
                 try {
                     String donorId = apptDoc.getString("donor_id");
                     DocumentSnapshot donorDoc = db.collection("users").document(donorId).get().get();
@@ -75,9 +76,15 @@ public class CompleteAppointmentServlet extends HttpServlet {
                     DocumentSnapshot bankMeta = db.collection("blood_banks").document(bankId).get().get();
                     String bankName = bankMeta.getString("bank_name");
                     
+                    // Add 50 points and 1 donation to the user profile
+                    db.collection("users").document(donorId).update(
+                        "impact_score", FieldValue.increment(50),
+                        "donation_count", FieldValue.increment(1)
+                    );
+                    
                     com.bloodbank.util.EmailService.sendDonationThankYou(donorEmail, donorName, bankName);
                 } catch (Exception e) {
-                    System.err.println("Thank you email failed: " + e.getMessage());
+                    System.err.println("Thank you email or gamification update failed: " + e.getMessage());
                 }
             }
 
