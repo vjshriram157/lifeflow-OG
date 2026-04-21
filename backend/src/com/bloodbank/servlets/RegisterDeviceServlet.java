@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+@WebServlet(name = "RegisterDeviceServlet", urlPatterns = {"/api/register-device"})
 public class RegisterDeviceServlet extends HttpServlet {
 
     @Override

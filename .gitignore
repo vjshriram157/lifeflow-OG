@@ -1,14 +1,32 @@
-# Ignore Firebase service account key
+# --- Security: Protect Credentials ---
+backend/src/config.properties
+backend/*.json
 *.json
 
-# Ignore credentials and local configs
-config.properties
-backend/src/config.properties
+# --- Environment: Local Binaries & Tools ---
+apache-maven-*/
+jdk-*/
+.mvn/
+mvnw
+mvnw.cmd
 
-# Ignore system binaries and IDE folders
-apache-maven-3.9.6/
-jdk-17.0.10+7/
+# --- IDE: Development Artifacts ---
 .idea/
+.vscode/
 *.iml
+*.iws
+*.ipr
+out/
 target/
-backend/target/
+bin/
+.classpath
+.project
+.settings/
+
+# --- OS: System Files ---
+.DS_Store
+Thumbs.db
+
+# --- Cleanup: Specific migration logs ---
+backend/migration_log.txt
+"New folder (3)/"

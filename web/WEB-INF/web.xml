@@ -25,7 +25,11 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/RegisterServlet</url-pattern>
-    </servlet-mapping>    <!-- ================= ADMIN APPROVAL ================= -->
+    </servlet-mapping>
+
+
+
+    <!-- ================= ADMIN APPROVAL ================= -->
     <servlet>
         <servlet-name>AdminApprovalServlet</servlet-name>
         <servlet-class>com.bloodbank.servlets.AdminApprovalServlet</servlet-class>
@@ -102,83 +106,14 @@
         <url-pattern>/api/analytics</url-pattern>
     </servlet-mapping>
 
-    <!-- SetupServlet removed - class not found in source -->
-
-    <!-- ================= AUTH & DEVICES ================= -->
+    <!-- ================= SETUP ================= -->
     <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.LogoutServlet</servlet-class>
+        <servlet-name>SetupServlet</servlet-name>
+        <servlet-class>com.bloodbank.servlets.SetupServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/LogoutServlet</url-pattern>
-    </servlet-mapping>
-
-    <!-- ================= CONTACT ================= -->
-    <servlet>
-        <servlet-name>ContactServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.ContactServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ContactServlet</servlet-name>
-        <url-pattern>/ContactServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>ResetPasswordServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.ResetPasswordServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ResetPasswordServlet</servlet-name>
-        <url-pattern>/ResetPasswordServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>RegisterDeviceServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.RegisterDeviceServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>RegisterDeviceServlet</servlet-name>
-        <url-pattern>/api/register-device</url-pattern>
-    </servlet-mapping>
-
-    <!-- ================= COMMUNITY FEATURES ================= -->
-    <servlet>
-        <servlet-name>BloodRequestServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.BloodRequestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>BloodRequestServlet</servlet-name>
-        <url-pattern>/api/blood-request</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DonorLocatorServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.DonorLocatorServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DonorLocatorServlet</servlet-name>
-        <url-pattern>/api/donors</url-pattern>
-    </servlet-mapping>
-
-    <!-- ================= EXPORT REPORT ================= -->
-    <servlet>
-        <servlet-name>ExportReportServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.ExportReportServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ExportReportServlet</servlet-name>
-        <url-pattern>/ExportReport.xlsx</url-pattern>
-    </servlet-mapping>
-
-    <!-- ================= NEWSLETTER ================= -->
-    <servlet>
-        <servlet-name>NewsletterServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.NewsletterServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>NewsletterServlet</servlet-name>
-        <url-pattern>/NewsletterServlet</url-pattern>
+        <servlet-name>SetupServlet</servlet-name>
+        <url-pattern>/setup-db</url-pattern>
     </servlet-mapping>
 
     <!-- ================= WELCOME ================= -->
@@ -186,29 +121,33 @@
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
-    <!-- ================= BLOG CMS ================= -->
+    <!-- ================= EXPORT REPORT ================= -->
     <servlet>
-        <servlet-name>BlogManagementServlet</servlet-name>
-        <servlet-class>com.bloodbank.servlets.BlogManagementServlet</servlet-class>
+        <servlet-name>ExportReportServlet</servlet-name>
+        <servlet-class>com.bloodbank.servlets.ExportReportServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>BlogManagementServlet</servlet-name>
-        <url-pattern>/api/admin/blogs</url-pattern>
+        <servlet-name>ExportReportServlet</servlet-name>
+        <url-pattern>/ExportReport</url-pattern>
     </servlet-mapping>
 
-    <!-- ================= ERROR HANDLING ================= -->
-    <error-page>
-        <error-code>404</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>403</error-code>
-        <location>/error.jsp</location>
-    </error-page>
+    <servlet>
+        <servlet-name>UpdateStockServlet</servlet-name>
+        <servlet-class>com.bloodbank.servlets.UpdateStockServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateStockServlet</servlet-name>
+        <url-pattern>/UpdateStockServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- ================= CHAT ================= -->
+    <servlet>
+        <servlet-name>ChatServlet</servlet-name>
+        <servlet-class>com.bloodbank.servlets.ChatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChatServlet</servlet-name>
+        <url-pattern>/api/chat</url-pattern>
+    </servlet-mapping>
 
 </web-app>

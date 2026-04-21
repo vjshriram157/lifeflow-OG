@@ -1,6 +1,5 @@
 package com.bloodbank.servlets;
 
-import com.bloodbank.util.EmailService;
 import com.bloodbank.util.FirebaseConfig;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
@@ -53,21 +52,17 @@ public class AdminApprovalServlet extends HttpServlet {
             // 1️⃣ Update user status
             db.collection("users").document(userId).update("status", newStatus).get();
 
-            // 2️⃣ If APPROVED → Send Notification & Handle Role Specific Logic
+            // 2️⃣ If approved BANK user → create blood bank
             if ("APPROVED".equalsIgnoreCase(newStatus)) {
                 DocumentSnapshot userDoc = db.collection("users").document(userId).get().get();
 
                 if (userDoc.exists()) {
-                    String fullName = userDoc.getString("full_name");
-                    String email = userDoc.getString("email");
                     String role = userDoc.getString("role");
 
-                    // 📧 Send automated approval email
-                    EmailService.sendAccountApprovalEmail(email, fullName);
-
-                    // 🏦 If approved BANK user → create blood bank record
                     if ("BANK".equalsIgnoreCase(role)) {
                         String city = userDoc.getString("city");
+                        String fullName = userDoc.getString("full_name");
+                        String email = userDoc.getString("email");
                         String phone = userDoc.getString("phone");
 
                         // 🌍 Auto-geocode bank city
@@ -101,7 +96,7 @@ public class AdminApprovalServlet extends HttpServlet {
         }
 
         // 🔁 Back to approvals page
-        response.sendRedirect(request.getContextPath() + "/adminPendingApprovals.jsp");
+        response.sendRedirect(request.getContextPath() + "/dashboard/admin/adminPendingApprovals.jsp");
     }
 
     // 🌍 Geocode city using OpenStreetMap (Nominatim)

@@ -25,27 +25,13 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
-<link href="<%=request.getContextPath()%>/assets/css/overrides_v3.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
 
     <!-- SIDEBAR -->
-    <div class="sidebar p-4">
-        <a href="<%=request.getContextPath()%>/index.jsp" class="brand mb-5 text-decoration-none">
-            <i class="fa-solid fa-droplet text-danger"></i> Life<span class="text-white">Flow</span>
-            <span class="badge bg-danger ms-2 fs-6 rounded-pill" style="font-family:'Inter'; letter-spacing:0">Admin</span>
-        </a>
-            <li><a href="home.jsp" class="nav-link active"><i class="fa-solid fa-border-all"></i> Dashboard</a></li>
-            <li><a href="<%=request.getContextPath()%>/adminPendingApprovals.jsp" class="nav-link"><i class="fa-solid fa-user-check"></i> Approvals</a></li>
-            <li><a href="emergencyBroadcast.jsp" class="nav-link"><i class="fa-solid fa-tower-broadcast"></i> Emergencies</a></li>
-            <li><a href="analytics.jsp" class="nav-link"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
-            <li><a href="adminDirectory.jsp" class="nav-link"><i class="fa-solid fa-address-book"></i> User Directory</a></li>
-            <li><a href="blogCMS.jsp" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Content Management</a></li>
-        <div class="mt-auto pt-5 pb-3">
-            <a href="<%=request.getContextPath()%>/LogoutServlet" class="btn btn-outline-light btn-sm w-100 rounded-pill"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out</a>
-        </div>
-    </div>
+    <% request.setAttribute("activePage", "dashboard"); %>
+    <jsp:include page="../../WEB-INF/fragments/sidebar-admin.jspf" />
 
     <!-- MAIN CONTENT -->
     <div class="container-fluid p-4 p-md-5 w-100">
@@ -162,69 +148,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- BLOOD REQUEST MONITORING -->
-                <div class="card card-modern border-0 fade-in-up delay-200 mb-4 bg-white shadow-sm overflow-hidden border-top border-danger border-4">
-                    <div class="card-body p-4 p-md-5">
-                        <h5 class="fw-bold mb-4 text-dark"><i class="fa-solid fa-chart-line text-danger me-2"></i> Peer-to-Peer Request Monitoring</h5>
-                        <div class="table-responsive">
-                            <table class="table table-modern align-middle mb-0">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th>Requester</th>
-                                        <th>Group</th>
-                                        <th>Hospital & City</th>
-                                        <th>Urgency</th>
-                                        <th>Status</th>
-                                        <th>Created</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="adminCommunityRequests">
-                                    <tr><td colspan="6" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2"></div> Fetching requests...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <script>
-            function loadAdminCommunityRequests() {
-                fetch('<%= request.getContextPath() %>/api/blood-request')
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.getElementById('adminCommunityRequests');
-                    
-                    if(data && data.error) {
-                        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error: ' + data.error + '</td></tr>';
-                        return;
-                    }
-
-                    if(!Array.isArray(data) || data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No peer-to-peer requests currently active.</td></tr>';
-                        return;
-                    }
-                    tbody.innerHTML = '';
-                    data.forEach(req => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = '<td class="fw-bold">' + (req.full_name || 'Anonymous donor') + '</td>' +
-                                    '<td><span class="badge bg-danger rounded-pill px-3">' + req.blood_group + '</span></td>' +
-                                    '<td class="small">' +
-                                        '<span class="d-block fw-bold">' + req.hospital_name + '</span>' +
-                                        '<span class="text-muted">' + req.city + '</span>' +
-                                    '</td>' +
-                                    '<td><span class="badge ' + (req.urgency === 'Emergency' ? 'bg-danger' : 'bg-warning') + ' rounded-pill">' + req.urgency + '</span></td>' +
-                                    '<td><span class="badge badge-soft-primary">' + req.status + '</span></td>' +
-                                    '<td class="text-muted small">' + req.created_at + '</td>';
-                        tbody.appendChild(tr);
-                    });
-                })
-                .catch(err => {
-                    console.error('Fetch error:', err);
-                    document.getElementById('adminCommunityRequests').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load requests. Please try again later.</td></tr>';
-                });
-            }
-                    window.addEventListener('load', loadAdminCommunityRequests);
-                </script>
             </div>
 
             <!-- QUICK ACTIONS -->
@@ -233,13 +156,13 @@
                     <div class="card-body p-4 position-relative z-1">
                         <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-bolt me-2"></i> Quick Actions</h5>
                         <div class="d-flex flex-column gap-3">
-                            <a href="<%=request.getContextPath()%>/adminPendingApprovals.jsp" class="btn btn-light text-danger fw-bold rounded-pill p-3 text-start shadow-sm">
+                            <a href="adminPendingApprovals.jsp" class="btn btn-light text-danger fw-bold rounded-pill p-3 text-start shadow-sm">
                                 <i class="fa-solid fa-user-check me-2"></i> Verify Pending Users
                             </a>
                             <a href="emergencyBroadcast.jsp" class="btn btn-outline-light fw-bold rounded-pill p-3 text-start">
                                 <i class="fa-solid fa-satellite-dish me-2"></i> Broadcast Emergency Alert
                             </a>
-                            <a href="<%=request.getContextPath()%>/ExportReport.xlsx" class="btn btn-outline-light fw-bold rounded-pill p-3 text-start">
+                            <a href="<%=request.getContextPath()%>/ExportReport" class="btn btn-outline-light fw-bold rounded-pill p-3 text-start">
                                 <i class="fa-solid fa-file-csv me-2"></i> Export System Report
                             </a>
                         </div>

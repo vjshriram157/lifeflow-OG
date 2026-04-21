@@ -3,209 +3,402 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Find Blood | LifeFlow Locator</title>
+    <title>Find Blood Bank | LifeFlow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0f172a !important; color: #f8fafc !important; font-family: 'Inter', sans-serif; padding-top: 100px; }
-        h1, h2, h3, .brand-text { font-family: 'Outfit', sans-serif; }
-        .finder-hero { padding: 40px 0; background: radial-gradient(circle at 50% 0%, rgba(225, 29, 72, 0.1) 0%, transparent 60%); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; }
-        .results-container { min-height: 400px; }
-        .table-dark { background: transparent !important; --bs-table-bg: transparent; }
-        .table-dark th { border-bottom: 2px solid rgba(255, 255, 255, 0.1); color: #94a3b8; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; padding: 20px; }
-        .table-dark td { border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #cbd5e1; padding: 25px 20px; vertical-align: middle; }
-        .bank-name { font-weight: 700; color: #fff; font-size: 1.1rem; }
-        .distance-badge { background: rgba(225, 29, 72, 0.1); color: #fb7185; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
-        .btn-request { background: #e11d48; color: #fff; border: none; border-radius: 50px; padding: 8px 20px; font-weight: 600; font-size: 0.85rem; transition: 0.3s; }
-        .btn-request:hover { background: #fb7185; transform: scale(1.05); color: #fff; }
-        .search-input { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #fff !important; border-radius: 15px !important; padding: 15px 25px; transition: 0.3s; }
-        .search-input:focus { background: rgba(255, 255, 255, 0.08) !important; border-color: #e11d48 !important; box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important; }
-        .loading-shimmer { height: 60px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 10px; margin-bottom: 15px; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-
-        /* SEARCH BAR COMPONENT STYLES */
-        select option, .form-select option { background-color: #1e293b !important; color: #ffffff !important; }
-        .search-container { width: 100%; max-width: 1100px; margin-top: 3rem; }
-        .search-glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 50rem; display: flex; align-items: center; gap: 10px; }
-        .search-item { flex: 1; padding: 10px 20px; display: flex; align-items: center; gap: 12px; border-right: 1px solid rgba(255, 255, 255, 0.1); }
-        .search-item:last-child { border-right: none; }
-        .search-select { background: transparent !important; border: none !important; color: #fff !important; width: 100%; outline: none; cursor: pointer; font-weight: 500; }
-        .btn-search { height: 55px; width: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #e11d48; color: white; border: none; transition: 0.3s; }
-        .btn-search:hover { background: #9f1239; transform: scale(1.1); }
-        .search-glow-fx { box-shadow: 0 10px 40px rgba(225, 29, 72, 0.15); border: 1px solid rgba(225, 29, 72, 0.3) !important; }
+        .page-header {
+            background: linear-gradient(135deg, rgba(15,23,42,1) 0%, rgba(15,23,42,0.85) 100%), url('https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&q=80') center/cover;
+            padding: 4rem 0;
+            color: white;
+            text-align: center;
+        }
+        .main-container {
+            margin-top: -3rem;
+            position: relative;
+            z-index: 5;
+        }
+        .accent-pill {
+            background: rgba(225, 29, 72, 0.15);
+            color: #ff4d6d;
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .btn-locator {
+            border: 1px solid rgba(225, 29, 72, 0.3);
+            color: var(--primary-crimson);
+            background: rgba(225, 29, 72, 0.05);
+            transition: var(--transition-smooth);
+        }
+        .btn-locator:hover {
+            background: var(--primary-crimson);
+            color: white;
+        }
+        .distance-chip {
+            background: var(--surface-main);
+            color: var(--text-muted);
+            border: 1px solid #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 50rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 2rem 1rem;
+            }
+            .brand-font.display-5 {
+                font-size: 1.75rem !important;
+            }
+            .lead {
+                font-size: 1rem !important;
+            }
+            .card-modern {
+                padding: 1rem !important;
+            }
+            .btn-locator {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-<jsp:include page="navbar.jsp" />
-
-<section class="finder-hero">
-    <div class="container">
-        <div class="text-center mb-5 animate-up">
-            <h1 class="display-3 fw-bold text-white mb-3">Donor Locator</h1>
-            <p class="text-visible-muted mx-auto" style="max-width: 600px;">Search our real-time grid for available blood units and verified volunteer donors in your city.</p>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3" style="background: var(--sidebar-bg) !important;">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="<%=request.getContextPath()%>/index.jsp">
+                <i class="fa-solid fa-droplet text-danger"></i>
+                <span style="font-family: 'Poppins'; font-weight: 700;">Life<span class="text-danger">Flow</span> Network</span>
+            </a>
+            <div>
+                <a href="login.jsp" class="btn btn-outline-light btn-sm rounded-pill px-3">Sign In</a>
+            </div>
         </div>
+    </nav>
 
-        <div class="glass-card p-5 animate-up search-glow-fx mt-4">
-            <form id="searchForm" class="search-glass w-100">
-                <div class="search-item">
-                    <i class="fa-solid fa-droplet text-danger"></i>
-                    <select class="search-select" id="bloodGroup" required>
-                        <option value="" selected disabled>Blood Group</option>
-                        <option value="A+">A+</option><option value="A-">A-</option>
-                        <option value="B+">B+</option><option value="B-">B-</option>
-                        <option value="O+">O+</option><option value="O-">O-</option>
-                        <option value="AB+">AB+</option><option value="AB-">AB-</option>
-                    </select>
-                </div>
-                <div class="search-item">
-                    <i class="fa-solid fa-map-location-dot text-danger"></i>
-                    <select class="search-select" id="stateSelect" required><option value="" selected disabled>Select State</option></select>
-                </div>
-                <div class="search-item">
-                    <i class="fa-solid fa-city text-danger"></i>
-                    <select class="search-select" id="cityInput" required><option value="" selected disabled>Select District</option></select>
-                </div>
-                <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </form>
+    <div class="page-header">
+        <div class="container fade-in-up">
+            <div class="accent-pill mb-3"><i class="fa-solid fa-location-dot me-2"></i> Locator</div>
+            <h1 class="brand-font display-5 fw-bold mb-3">Find a Nearby Blood Bank</h1>
+            <p class="lead text-white-50 mx-auto" style="max-width: 600px;">
+                Search, compare, and instantly map routes to authorized blood banks in your vicinity.
+            </p>
+        </div>
+    </div>
 
-            <div class="results-container mt-5">
-                <div id="loading" style="display: none;">
-                    <div class="loading-shimmer"></div>
-                    <div class="loading-shimmer"></div>
-                    <div class="loading-shimmer"></div>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table table-dark" id="resultsTable" style="display: none;">
-                        <thead>
-                            <tr>
-                                <th>Facility / Donor</th>
-                                <th>Location</th>
-                                <th>Distance</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsBody">
-                            <!-- Results will be injected here -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div id="noResults" class="text-center py-5" style="display: none;">
-                    <i class="fa-solid fa-map-location-dot text-danger mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
-                    <h4 class="text-white">No donors found in this area</h4>
-                    <p class="text-visible-muted">Try expanding your search radius or checking a nearby city.</p>
+    <main class="main-container pb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 fade-in-up delay-100">
+                    <div class="card card-modern p-2 p-md-4">
+                        <div class="card-body">
+                            
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 pb-3 border-bottom border-light">
+                                <h5 class="mb-0 fw-bold"><i class="fa-solid fa-magnifying-glass me-2 text-danger"></i> Search Criteria</h5>
+                                <button id="btnUseLocation" class="btn btn-locator rounded-pill btn-sm fw-bold px-3 py-2">
+                                    <i class="fa-solid fa-location-crosshairs me-1"></i> Use My GPS
+                                </button>
+                            </div>
+
+                            <form id="searchForm" class="row g-3 align-items-end mb-4">
+                                <div class="col-md-4">
+                                    <label for="stateSelect" class="form-label">State</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i class="fa-solid fa-map text-muted"></i></span>
+                                        <select class="form-select form-control-modern bg-light border-0" id="stateSelect">
+                                            <option value="" selected disabled>Select State</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="city" class="form-label">District</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i class="fa-solid fa-city text-muted"></i></span>
+                                        <select class="form-select form-control-modern bg-light border-0" id="city">
+                                            <option value="" selected disabled>Select District</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="pincode" value="">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="bloodGroup" class="form-label">Blood Group</label>
+                                    <select id="bloodGroup" class="form-select form-control-modern bg-light border-0">
+                                        <option value="">Any Available</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 text-end mt-4">
+                                    <button type="button" id="btnSearch" class="btn btn-premium px-5 rounded-pill">
+                                        Search Facilities <i class="fa-solid fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div id="resultsMeta" class="d-flex justify-content-between align-items-center mb-3 mt-5" style="display:none !important;">
+                                <h6 class="fw-bold mb-0">Results Found: <span id="resultCount" class="text-danger"></span></h6>
+                                <span class="text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-satellite me-1"></i> Calculated via Haversine 25km radius</span>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-modern align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th>Facility Details</th>
+                                            <th>Location</th>
+                                            <th>Est. Distance</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultsBody">
+                                        <tr id="noResultsRow">
+                                            <td colspan="4" class="text-center text-muted py-5">
+                                                <i class="fa-solid fa-map-location-dot h2 text-light mb-3"></i><br>
+                                                Start searching by city, pin code, or your device GPS.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </main>
 
-<jsp:include page="footer.jsp" />
+    <script>
+        const apiBase = '<%= request.getContextPath() %>/api/locator';
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const searchForm = document.getElementById('searchForm');
-    const loading = document.getElementById('loading');
-    const resultsTable = document.getElementById('resultsTable');
-    const resultsBody = document.getElementById('resultsBody');
-    const noResults = document.getElementById('noResults');
-    const stateSelect = document.getElementById("stateSelect");
-    const cityInput = document.getElementById("cityInput");
-
-    // Initialize States & Districts dropdowns
-    document.addEventListener("DOMContentLoaded", async function() {
-        try {
-            const resp = await fetch("https://raw.githubusercontent.com/sab99r/Indian-States-And-Districts/master/states-and-districts.json");
-            const data = await resp.json();
-            data.states.forEach(s => {
-                const opt = document.createElement("option");
-                opt.value = opt.textContent = s.state;
-                stateSelect.appendChild(opt);
-            });
-            stateSelect.addEventListener("change", () => {
-                cityInput.innerHTML = '<option value="" selected disabled>Select District</option>';
-                const state = data.states.find(s => s.state === stateSelect.value);
-                state.districts.forEach(d => {
-                    const opt = document.createElement("option");
-                    opt.value = opt.textContent = d;
-                    cityInput.appendChild(opt);
-                });
-            });
-        } catch(e) { console.error("Error loading location data:", e); }
-    });
-
-    searchForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const city = document.getElementById('cityInput').value.trim();
-        const bloodGroup = document.getElementById('bloodGroup').value;
-        
-        if (!city) return;
-
-        // Reset state
-        loading.style.display = 'block';
-        resultsTable.style.display = 'none';
-        noResults.style.display = 'none';
-        resultsBody.innerHTML = '';
-
-        try {
-            // Use the established platform locator API
-            const ctx = '<%= request.getContextPath() %>';
-            const response = await fetch(`\${ctx}/api/locator?city=\${encodeURIComponent(city)}&bloodGroup=\${encodeURIComponent(bloodGroup)}`);
-            
-            if (!response.ok) throw new Error('Search failed');
-            
-            const data = await response.json();
-            
-            if (!data.banks || data.banks.length === 0) {
-                noResults.style.display = 'block';
-            } else {
-                data.banks.forEach(bank => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>
-                            <div class="bank-name">\${bank.name}</div>
-                            <small class="text-visible-muted">Verified Medical Facility</small>
-                        </td>
-                        <td>
-                            <i class="fa-solid fa-location-dot text-danger me-2"></i>
-                            \${bank.city}
-                        </td>
-                        <td>
-                            <span class="distance-badge">\${bank.distanceKm.toFixed(1)} km away</span>
-                        </td>
-                        <td>
-                            <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
-                                <i class="fa-solid fa-check-circle me-1"></i> Active
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn-request" onclick="requestBlood('\${bank.id}')">Request</button>
-                        </td>
-                    `;
-                    resultsBody.appendChild(row);
-                });
-                resultsTable.style.display = 'table';
-            }
-        } catch (err) {
-            console.error(err);
-            alert('An error occurred while searching. Please try again later.');
-        } finally {
-            loading.style.display = 'none';
+        function createDirectionsUrl(lat, lng, label) {
+            const encodedLabel = encodeURIComponent(label || 'Blood Bank');
+            return `https://www.google.com/maps/dir/?api=1&destination=\${lat},\${lng}&destination_place_id=\${encodedLabel}`;
         }
-    });
 
-    function requestBlood(bankId) {
-        window.location.href = `login.jsp?redirect=request.jsp&bankId=\${bankId}`;
-    }
-</script>
+        function renderResults(banks) {
+            const body = document.getElementById('resultsBody');
+            const meta = document.getElementById('resultsMeta');
+            const countEl = document.getElementById('resultCount');
+            body.innerHTML = '';
 
+            if (!banks || banks.length === 0) {
+                meta.style.setProperty('display', 'none', 'important');
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="4" class="text-center text-muted py-5 bg-light rounded"><i class="fa-solid fa-magnifying-glass-location h2 text-secondary mb-3"></i><br>No approved blood banks found matching the criteria.</td>';
+                body.appendChild(row);
+                return;
+            }
+
+            meta.style.setProperty('display', 'flex', 'important');
+            countEl.textContent = banks.length;
+
+            banks.forEach((bank, index) => {
+                const row = document.createElement('tr');
+                row.classList.add('fade-in-up');
+                row.style.animationDelay = `\${index * 50}ms`;
+                row.innerHTML = `
+            <td>
+                <div class="fw-bold text-dark">\${bank.name}</div>
+                <div class="text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-id-badge me-1"></i> ID #\${bank.id}</div>
+            </td>
+            <td>
+                <div class="text-dark">\${bank.addressLine1 || '-'}</div>
+                <div class="text-muted" style="font-size: 0.85rem;">\${bank.city || ''} \${bank.pincode || ''}</div>
+            </td>
+            <td>
+                <span class="distance-chip">
+                    <i class="fa-solid fa-route me-1 text-danger"></i> ~\${bank.distanceKm.toFixed(1)} km
+                </span>
+            </td>
+            <td class="text-center">
+                <a href="\${createDirectionsUrl(bank.latitude, bank.longitude, bank.name)}"
+                   target="_blank"
+                   class="btn btn-outline-dark btn-sm rounded-pill px-3 me-2">
+                    <i class="fa-solid fa-diamond-turn-right"></i> Maps
+                </a>
+                <button type="button"
+                        class="btn btn-premium btn-sm rounded-pill px-3"
+                        onclick="onBookAppointment(\${bank.id})">
+                    Book <i class="fa-solid fa-calendar-check ms-1"></i>
+                </button>
+            </td>
+        `;
+                body.appendChild(row);
+            });
+        }
+
+        function onBookAppointment(bankId) {
+            window.location.href = '<%=request.getContextPath()%>/BookAppointmentServlet?prefillBankId=' + bankId;
+        }
+
+        async function searchByLocation(lat, lng) {
+            const bloodGroup = document.getElementById('bloodGroup').value;
+            const url = new URL(apiBase, window.location.origin);
+            url.searchParams.set('lat', lat);
+            url.searchParams.set('lng', lng);
+            url.searchParams.set('radiusKm', '50'); // Increased radius
+            if (bloodGroup) url.searchParams.set('bloodGroup', bloodGroup);
+
+            setLoading();
+            try {
+                const resp = await fetch(url.toString());
+                const data = await resp.json();
+                renderResults(data.banks || []);
+            } catch (e) {
+                setError();
+            }
+        }
+
+        document.getElementById('btnUseLocation').addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                return;
+            }
+            document.getElementById('btnUseLocation').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Locating...';
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    document.getElementById('btnUseLocation').innerHTML = '<i class="fa-solid fa-location-crosshairs me-1"></i> Use My GPS';
+                    searchByLocation(pos.coords.latitude, pos.coords.longitude);
+                },
+                () => {
+                    document.getElementById('btnUseLocation').innerHTML = '<i class="fa-solid fa-location-crosshairs me-1"></i> Use My GPS';
+                    alert('Unable to access location. Ensure tracking is permitted or manually search City/Pin.');
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        });
+
+        async function searchByAddress(city, pincode) {
+            const bloodGroup = document.getElementById('bloodGroup').value;
+            const url = new URL(apiBase, window.location.origin);
+            if (city) url.searchParams.set('city', city);
+            if (pincode) url.searchParams.set('pincode', pincode);
+            url.searchParams.set('radiusKm', '50');
+            if (bloodGroup) url.searchParams.set('bloodGroup', bloodGroup);
+
+            setLoading();
+            try {
+                const resp = await fetch(url.toString());
+                const data = await resp.json();
+                if (data.error) {
+                    const body = document.getElementById('resultsBody');
+                    body.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-5">\${data.error}</td></tr>`;
+                    return;
+                }
+                renderResults(data.banks || []);
+            } catch (e) {
+                setError();
+            }
+        }
+
+        document.getElementById('btnSearch').addEventListener('click', () => {
+            const city = document.getElementById('city').value.trim();
+            const pincode = document.getElementById('pincode').value.trim();
+
+            if (!city && !pincode) {
+                alert('Please enter a City or Postal Code to search by address.');
+                return;
+            }
+            searchByAddress(city, pincode);
+        });
+
+        function setLoading() {
+            document.getElementById('resultsBody').innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center py-5">
+                    <div class="spinner-border text-danger" role="status"></div>
+                    <div class="mt-2 text-muted fw-bold">Querying Data...</div>
+                </td>
+            </tr>`;
+        }
+        function setError() {
+            document.getElementById('resultsBody').innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center text-danger py-5 fw-bold">
+                    <i class="fa-solid fa-triangle-exclamation h3"></i><br>
+                    Network failure extracting resources.
+                </td>
+            </tr>`;
+        }
+
+        // Auto-search if parameters are passed from home page
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const cityParam = params.get('city');
+            const pincodeParam = params.get('pincode');
+            const bgParam = params.get('bloodGroup');
+
+            let shouldSearch = false;
+
+            if (bgParam) {
+                document.getElementById('bloodGroup').value = bgParam;
+            }
+
+            // Fetch state data
+            const stateSelect = document.getElementById("stateSelect");
+            const citySelect = document.getElementById("city");
+            let locationData = null;
+
+            try {
+                const response = await fetch("https://raw.githubusercontent.com/sab99r/Indian-States-And-Districts/master/states-and-districts.json");
+                locationData = await response.json();
+                
+                if (locationData && locationData.states) {
+                    locationData.states.forEach(stateObj => {
+                        const option = document.createElement("option");
+                        option.value = stateObj.state;
+                        option.textContent = stateObj.state;
+                        stateSelect.appendChild(option);
+                    });
+                }
+            } catch(e) {
+                console.error("Could not load geographic data");
+            }
+
+            stateSelect.addEventListener("change", function() {
+                citySelect.innerHTML = '<option value="" selected disabled>Select District</option>';
+                const selectedState = this.value;
+                if(!locationData || !locationData.states) return;
+                
+                const stateObj = locationData.states.find(s => s.state === selectedState);
+                if(stateObj && stateObj.districts) {
+                    stateObj.districts.forEach(district => {
+                        const option = document.createElement("option");
+                        option.value = district;
+                        option.textContent = district;
+                        citySelect.appendChild(option);
+                    });
+                }
+            });
+
+            if (cityParam) {
+                // Since state is unlinked directly without full reverse geocoding, we inject city purely for visual consistency
+                citySelect.innerHTML = `<option value="\${cityParam}" selected>\${cityParam}</option>`;
+                shouldSearch = true;
+            }
+            if (pincodeParam) {
+                document.getElementById('pincode').value = pincodeParam;
+                shouldSearch = true;
+            }
+
+            if (shouldSearch) {
+                searchByAddress(cityParam || '', pincodeParam || '');
+            }
+        });
+    </script>
 </body>
 </html>

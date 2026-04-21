@@ -35,10 +35,8 @@ public class AuthFilter implements Filter {
         boolean loggedIn = (session != null && session.getAttribute("userId") != null);
         boolean loginRequest = uri.equals(loginPage) || uri.endsWith("LoginServlet");
 
-        // ✅ PUBLIC API WHITELIST
-        if (uri.endsWith("/api/locator") || uri.endsWith("/api/register-device") || 
-            uri.endsWith("/api/chat") || uri.endsWith("/api/donors") || 
-            uri.endsWith("/api/blood-request")) {
+        // ✅ Allow public APIs (for mobile app)
+        if (uri.contains("/api/locator") || uri.contains("/api/register-device")) {
             chain.doFilter(request, response);
             return;
         }

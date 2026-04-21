@@ -8,144 +8,118 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-deep: #0f172a;
-            --glass-card: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-slate: #f1f5f9;
-            --text-muted: #94a3b8;
-            --brand-danger: #e11d48;
-        }
-
-        body {
-            background-color: #0f172a !important;
-            color: #f1f5f9 !important;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            padding-top: 100px;
-        }
-
-        h1, h2, h3, .brand-text {
-            font-family: 'Outfit', sans-serif;
-            color: #ffffff !important;
-        }
-
-        .main-content {
-            padding: 80px 0;
-            background-color: #0f172a;
-        }
-
-        .legal-card {
-            background: rgba(255, 255, 255, 0.03) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            border-radius: 24px;
-            padding: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .legal-section {
-            margin-bottom: 3rem;
-        }
-
-        .legal-section h2 {
-            color: #ffffff !important;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .legal-section h2 i {
-            color: #e11d48 !important;
-            font-size: 1.5rem;
-        }
-
-        .legal-section p, .legal-section li {
-            color: #94a3b8 !important;
-            line-height: 1.8;
-            font-size: 1.05rem;
-        }
-
-        .legal-section ul {
-            padding-left: 1.2rem;
-        }
-
-        .legal-section li {
-            margin-bottom: 0.8rem;
-        }
-
-        .last-updated {
-            color: #e11d48 !important;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-        }
+        body { padding-top: 0; }
+        .page-header { background: linear-gradient(135deg, rgba(15,23,42,1) 0%, rgba(15,23,42,0.85) 100%); padding: 4rem 0; color: white; text-align: center; }
+        .main-container { margin-top: 2rem; min-height: 40vh;}
+        /* Shared UI Snippets */
+        .top-header { background: #1e293b; color: white; padding: 10px 0; font-size: 0.9rem; }
+        .top-header .brand-logo-text { font-size: 1.2rem; font-weight: 800; display:flex; align-items:center; gap:8px;}
+        .top-header .brand-logo-text i { color: #e11d48; }
+        .top-header span { font-weight: 400; font-size: 0.85rem; color: #cbd5e1; }
+        .btn-outline-white { border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50px; font-weight: 600; font-size: 0.8rem; padding: 6px 16px; margin-left:10px;}
+        .btn-orange { background: var(--brand-orange); color: white; border-radius: 50px; font-weight: 600; font-size: 0.8rem; padding: 6px 16px;}
+        .navbar-custom { background: white !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); padding-top: 15px; padding-bottom: 15px;}
+        .navbar-custom .nav-link { font-weight: 600; font-size: 0.9rem; color: var(--brand-dark) !important; padding: 10px 20px !important; }
+        .navbar-custom .nav-link:hover { color: var(--brand-orange) !important; }
+        .donate-btn-nav { background: #fee2e2; color: #e11d48; font-weight: 700; border-radius: 50px; padding: 10px 25px; font-size: 0.9rem; border: 1px solid #fecaca; }
+        footer { background-color: var(--brand-dark); color: #a0a8b3; padding: 60px 0 20px 0; }
+        footer h5 { color: #fff; font-weight: 600; margin-bottom: 25px; }
+        footer ul { list-style: none; padding: 0; }
+        footer ul li { margin-bottom: 12px; }
+        footer ul li a { color: #a0a8b3; text-decoration: none; transition: 0.3s; }
+        footer ul li a:hover { color: var(--brand-orange); }
     </style>
 </head>
 <body>
 
-<jsp:include page="navbar.jsp" />
-
-<main class="main-content">
-    <div class="container">
-        <div class="text-center mb-5 animate-up">
-            <div class="last-updated">Last Updated: April 20, 2026</div>
-            <h1 class="display-3 fw-bold text-white mb-4">Privacy Policy</h1>
-            <p class="lead mx-auto" style="max-width: 700px; color: #94a3b8;">How LifeFlow secures your personal health identifiers and medical records within our autonomous healthcare network.</p>
+<div class="top-header">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="brand-logo-text">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <div>LifeFlow <span>Premium Blood Bank Management</span></div>
         </div>
+        <div class="d-flex align-items-center">
+            <a href="register.jsp" class="btn btn-orange"><i class="fa-solid fa-user"></i> REGISTER</a>
+            <a href="login.jsp" class="btn btn-outline-white"><i class="fa-solid fa-lock"></i> LOGIN</a>
+        </div>
+    </div>
+</div>
 
-        <div class="legal-card animate-up delay-1">
-            <div class="legal-section">
-                <h2><i class="fa-solid fa-user-shield"></i> 1. Medical Data Sovereignty</h2>
-                <p>Your blood type, donation history, and health screenings are considered **highly sensitive** information. We adhere to localized healthcare standards:</p>
-                <ul>
-                    <li>All patient records are encrypted at rest using **AES-256 standard encryption**.</li>
-                    <li>Access to donor records is audited and restricted to authorized medical administrators at partner hospitals.</li>
-                    <li>We never store your direct government ID numbers locally; we use verified hash tokens for account validation.</li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container d-flex justify-content-between">
+        <button class="navbar-toggler text-white bg-dark" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><i class="fa-solid fa-bars"></i></button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="index.jsp">HOME</a></li>
+                <li class="nav-item"><a class="nav-link" href="findBloodBank.jsp">FIND BLOOD</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.jsp">BLOG</a></li>
+                <li class="nav-item"><a class="nav-link" href="register.jsp">DONATE BLOOD</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.jsp">LOGIN</a></li>
+            </ul>
+        </div>
+        <a href="register.jsp" class="donate-btn-nav text-decoration-none">BECOME A DONOR</a>
+    </div>
+</nav>
 
-            <div class="legal-section">
-                <h2><i class="fa-solid fa-map-location-dot"></i> 2. Geolocation & Proximity Data</h2>
-                <p>To enable the "Find Blood" features, we use transient geolocation data:</p>
-                <ul>
-                    <li>Your precise location is used only to calculate distance to the nearest blood bank or donor pool.</li>
-                    <li>We do not log a permanent history of your movements.</li>
-                    <li>You can opt-out of sharing location data, though this will disable the emergency broadcast reception in your immediate vicinity.</li>
-                </ul>
-            </div>
+<div class="page-header">
+    <div class="container fade-in-up">
+        <h1 class="display-4 fw-bold mb-3" style="font-family:'Poppins';">Privacy Policy</h1>
+        <p class="lead text-white-50 mx-auto" style="max-width: 600px;">How we protect your medical and personal data.</p>
+    </div>
+</div>
 
-            <div class="legal-section">
-                <h2><i class="fa-solid fa-cloud-arrow-up"></i> 3. Security Infrastructure</h2>
-                <p>LifeFlow is hosted on a secure infrastructure powered by Google Firebase:</p>
-                <ul>
-                    <li><strong>Realtime Database Security:</strong> We use granular Firestore Security Rules to prevent unauthorized read/write access.</li>
-                    <li><strong>Encrypted Transport:</strong> All data moving between your browser and our servers is protected by SSL/TLS encryption.</li>
-                    <li><strong>Anonymization:</strong> For analytics and demand prediction (AI), we use anonymized data sets that cannot be traced back to individual donors.</li>
-                </ul>
-            </div>
-
-            <div class="legal-section">
-                <h2><i class="fa-solid fa-user-minus"></i> 4. Right to Erasure</h2>
-                <p>You have the right to request the permanent deletion of your donor profile:</p>
-                <ul>
-                    <li>Upon request, all personal contact details and location history will be erased from our active servers within 72 hours.</li>
-                    <li>Medical transaction logs (donation history) may be kept in an anonymized format for clinical audit purposes as required by national health laws.</li>
-                </ul>
-            </div>
+<main class="main-container container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h2 class="text-danger mt-5"><i class="fa-solid fa-shield-halved"></i> Data Security Standard</h2>
+            <p class="text-muted mt-3">All medical records and donor identities are encrypted using AES-256 standard encryption before being transmitted to our secure Firestore databases.</p>
         </div>
     </div>
 </main>
 
-<jsp:include page="footer.jsp" />
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="brand-logo-text mb-3" style="font-size:1.5rem; font-weight:800; color:white;">
+                    <i class="fa-solid fa-heart-pulse text-danger"></i> LifeFlow <span style="font-size:0.9rem; font-weight:400; color:#ddd;">Premium Blood Bank</span>
+                </div>
+                <h4 class="text-white mt-4 fw-bold">Pioneering Health<br>Tech Solutions</h4>
+            </div>
+            <div class="col-md-2 col-6 mb-4">
+                <h5>Platform</h5>
+                <ul>
+                    <li><a href="index.jsp">Home</a></li>
+                    <li><a href="findBloodBank.jsp">Find Blood</a></li>
+                    <li><a href="login.jsp">Login</a></li>
+                    <li><a href="register.jsp">Register</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 col-6 mb-4">
+                <h5>Features</h5>
+                <ul>
+                    <li><a href="features.jsp">Instant Search</a></li>
+                    <li><a href="features.jsp">Stock Management</a></li>
+                    <li><a href="features.jsp">SMS Alerts</a></li>
+                    <li><a href="features.jsp">Firebase Realtime</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5>Support</h5>
+                <ul>
+                    <li><a href="contact.jsp">Contact Admin</a></li>
+                    <li><a href="privacy.jsp">Privacy Policy</a></li>
+                    <li><a href="terms.jsp">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="mb-0">Copyright © 2026. Designed & Developed by <span style="color:var(--brand-orange)">Vj</span></p>
+        </div>
+    </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

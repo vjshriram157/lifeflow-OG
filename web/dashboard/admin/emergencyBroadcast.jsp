@@ -16,28 +16,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
-    <link href="<%=request.getContextPath()%>/assets/css/overrides_v3.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
     <!-- SIDEBAR -->
-    <div class="sidebar p-4">
-        <a href="<%=request.getContextPath()%>/index.jsp" class="brand mb-5 text-decoration-none">
-            <i class="fa-solid fa-droplet text-danger"></i> Life<span class="text-white">Flow</span>
-            <span class="badge bg-danger ms-2 fs-6 rounded-pill" style="font-family:'Inter'; letter-spacing:0">Admin</span>
-        </a>
-        <ul class="nav flex-column gap-2 mt-4">
-            <li><a href="home.jsp" class="nav-link"><i class="fa-solid fa-border-all"></i> Dashboard</a></li>
-            <li><a href="<%=request.getContextPath()%>/adminPendingApprovals.jsp" class="nav-link"><i class="fa-solid fa-user-check"></i> Approvals</a></li>
-            <li><a href="emergencyBroadcast.jsp" class="nav-link active"><i class="fa-solid fa-tower-broadcast"></i> Emergencies</a></li>
-            <li><a href="analytics.jsp" class="nav-link"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
-            <li><a href="adminDirectory.jsp" class="nav-link"><i class="fa-solid fa-address-book"></i> User Directory</a></li>
-            <li><a href="blogCMS.jsp" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Content Management</a></li>
-        </ul>
-        <div class="mt-auto pt-5 pb-3">
-            <a href="<%=request.getContextPath()%>/LogoutServlet" class="btn btn-outline-light btn-sm w-100 rounded-pill"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out</a>
-        </div>
-    </div>
+    <% request.setAttribute("activePage", "emergencies"); %>
+    <jsp:include page="../../WEB-INF/fragments/sidebar-admin.jspf" />
 
     <!-- MAIN CONTENT -->
     <div class="container-fluid p-4 p-md-5 w-100">
@@ -107,10 +91,9 @@
                                     </h5>
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-sm rounded-pill px-4 fw-bold shadow-sm"
-                                            style="background: linear-gradient(135deg, #e11d48, #9f1239); color: #fff; border: none;"
-                                            onclick="sendBroadcast(this, '<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
-                                        <i class="fa-solid fa-podcast me-1"></i> Dispatch Alert
+                                    <button class="btn btn-premium btn-sm rounded-pill px-4 fw-bold shadow-sm"
+                                            onclick="sendBroadcast('<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
+                                        <i class="fa-solid fa-podcast me-1"></i> Dispatch Request
                                     </button>
                                 </td>
                             </tr>
@@ -149,8 +132,8 @@
                                     <span class="small text-dark"><em>"<%= msg != null ? msg : "Urgent request." %>"</em></span>
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold bg-white"
-                                            onclick="sendBroadcast(this, '<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
+                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold"
+                                            onclick="sendBroadcast('<%= bankId %>', '<%= bankName != null ? bankName.replace("'", "\\'") : "" %>', '<%= bloodGroup != null ? bloodGroup : "" %>')">
                                         <i class="fa-solid fa-podcast me-1"></i> Push Again
                                     </button>
                                 </td>
@@ -182,11 +165,12 @@
 </div>
 
 <script>
-    function sendBroadcast(btn, bankId, bankName, bloodGroup) {
+    function sendBroadcast(bankId, bankName, bloodGroup) {
         if (!confirm("Dispatch high-priority push notification for " + bloodGroup + " donors near " + bankName + "?")) {
             return;
         }
 
+        const btn = event.currentTarget;
         const originalHtml = btn.innerHTML;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Dispatching...';
         btn.disabled = true;
@@ -201,20 +185,17 @@
             body: formData,
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
-        .then(async response => {
-            const isJson = response.headers.get('content-type')?.includes('application/json');
-            const data = isJson ? await response.json() : null;
-
-            if (response.ok) {
-                alert("✅ SUCCESS: Dispatch operation completed.\n\nAlert ID: " + (data.alertId || "N/A") + "\nDonors Notified: " + (data.notifiedCount || 0));
-                // Optional: window.location.reload(); 
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(res => {
+            if (res.status === 200) {
+                alert("Success!\nAlert ID: " + res.body.alertId + "\nDonors Notified: " + res.body.notifiedCount);
             } else {
-                throw new Error(data?.error || "Server returned status " + response.status);
+                alert("Error: " + (res.body.error || "Failed to dispatch request"));
             }
         })
         .catch(err => {
-            alert("❌ DISPATCH FAILED: " + err.message);
-            console.error("Dispatch Error:", err);
+            alert("Network error: Could not connect to dispatch server.");
+            console.error(err);
         })
         .finally(() => {
             btn.innerHTML = originalHtml;

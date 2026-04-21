@@ -58,15 +58,6 @@ public class VerifyRegistrationServlet extends HttpServlet {
                 // Update user status
                 db.collection("users").document(userId).update("status", "PENDING").get();
                 
-                // 📧 Notify Admin
-                try {
-                    String name = users.get(0).getString("full_name");
-                    String role = users.get(0).getString("role");
-                    com.bloodbank.util.EmailService.notifyAdminOfNewPendingApproval(name, email, role);
-                } catch (Exception e) {
-                    System.err.println("Admin notification failed: " + e.getMessage());
-                }
-
                 // Delete used OTP
                 db.collection("password_resets").document(tokens.get(0).getId()).delete().get();
                 

@@ -1,0 +1,62 @@
+<%-- 
+    LifeFlow Admin Sidebar Fragment
+    Requires: currentPage variable to be set in the including page (e.g., <% String currentPage = "approvals"; %>)
+--%>
+<%
+    String activePage = (String) request.getAttribute("activePage");
+    if (activePage == null) activePage = ""; 
+    String root = request.getContextPath();
+%>
+<div class="sidebar p-4 h-100">
+    <a href="<%= root %>/index.jsp" class="brand mb-5 text-decoration-none d-block">
+        <i class="fa-solid fa-droplet text-danger"></i> Life<span class="text-white">Flow</span>
+        <span class="badge bg-danger ms-2 fs-6 rounded-pill" style="font-family:'Inter'; letter-spacing:0">Admin</span>
+    </a>
+    
+    <ul class="nav flex-column gap-2 mt-4">
+        <li>
+            <a href="<%= root %>/dashboard/admin/home.jsp" class="nav-link <%= "dashboard".equals(activePage) ? "active" : "" %>">
+                <i class="fa-solid fa-border-all"></i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="<%= root %>/dashboard/admin/adminPendingApprovals.jsp" class="nav-link <%= "approvals".equals(activePage) ? "active" : "" %>">
+                <i class="fa-solid fa-user-check"></i> Approvals
+            </a>
+        </li>
+        <li>
+            <a href="<%= root %>/dashboard/admin/emergencyBroadcast.jsp" class="nav-link <%= "emergencies".equals(activePage) ? "active" : "" %>">
+                <i class="fa-solid fa-tower-broadcast"></i> Emergencies
+            </a>
+        </li>
+        <li>
+            <a href="<%= root %>/dashboard/admin/analytics.jsp" class="nav-link <%= "analytics".equals(activePage) ? "active" : "" %>">
+                <i class="fa-solid fa-chart-line"></i> Analytics
+            </a>
+        </li>
+        <li>
+            <a href="<%= root %>/dashboard/admin/adminDirectory.jsp" class="nav-link <%= "directory".equals(activePage) ? "active" : "" %>">
+                <i class="fa-solid fa-address-book"></i> User Directory
+            </a>
+        </li>
+    </ul>
+
+    <div class="mt-auto pt-5 pb-3">
+        <div class="card bg-dark border-secondary border-opacity-25 mb-4 rounded-4 overflow-hidden">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height: 35px;">
+                        <i class="fa-solid fa-user-shield fs-6"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-white mb-0 fw-bold text-truncate" style="font-size: 0.85rem;"><%= session.getAttribute("fullName") %></p>
+                        <p class="text-muted mb-0 small text-truncate">System Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="<%= root %>/LogoutServlet" class="btn btn-outline-light btn-sm w-100 rounded-pill py-2 border-opacity-25">
+            <i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out
+        </a>
+    </div>
+</div>

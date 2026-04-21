@@ -107,16 +107,6 @@ public class BookAppointmentServlet extends HttpServlet {
 
             db.collection("appointments").add(appointmentData).get();
 
-            // 📧 Automated Booking Confirmation
-            try {
-                String donorEmail = donorDoc.getString("email");
-                DocumentSnapshot bankDoc = db.collection("blood_banks").document(bankId).get().get();
-                String bankName = bankDoc.getString("bank_name");
-                com.bloodbank.util.EmailService.sendBookingConfirmation(donorEmail, bankName, appointmentTime);
-            } catch (Exception e) {
-                System.err.println("Booking confirmation email failed: " + e.getMessage());
-            }
-
             response.sendRedirect(request.getContextPath() + "/dashboard/donor/home.jsp");
 
         } catch (Exception e) {

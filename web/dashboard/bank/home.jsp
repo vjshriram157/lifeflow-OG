@@ -17,7 +17,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/assets/css/theme.css" rel="stylesheet">
-    <link href="<%=request.getContextPath()%>/assets/css/overrides_v3.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
@@ -184,63 +183,6 @@ try {
                 </div>
             </div>
         </div>
-
-        <div class="card card-modern border-0 fade-in-up delay-200 mb-4 bg-white shadow-sm overflow-hidden border-start border-danger border-4">
-            <div class="card-body p-4 p-md-5">
-                <h4 class="fw-bold mb-4"><i class="fa-solid fa-hand-holding-medical text-danger me-2"></i> External Blood Requests (Public)</h4>
-                <div class="table-responsive">
-                    <table class="table table-modern align-middle mb-0">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>Group</th>
-                                <th>Location (City)</th>
-                                <th>Hospital</th>
-                                <th>Urgency</th>
-                                <th>Posted</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bankCommunityRequests">
-                            <tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm me-2"></div> Loading community needs...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function loadBankCommunityRequests() {
-                fetch('<%= request.getContextPath() %>/api/blood-request')
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.getElementById('bankCommunityRequests');
-                    
-                    if(data && data.error) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error: ' + data.error + '</td></tr>';
-                        return;
-                    }
-
-                    if(!Array.isArray(data) || data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No external requests found.</td></tr>';
-                        return;
-                    }
-                    tbody.innerHTML = '';
-                    data.forEach(req => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = '<td><span class="badge bg-danger rounded-pill px-3">' + req.blood_group + '</span></td>' +
-                            '<td class="text-muted"><i class="fa-solid fa-city me-1"></i> ' + req.city + '</td>' +
-                            '<td class="fw-bold text-dark">' + req.hospital_name + '</td>' +
-                            '<td><span class="badge ' + (req.urgency === 'Emergency' ? 'bg-danger' : 'bg-warning') + ' rounded-pill">' + req.urgency + '</span></td>' +
-                            '<td class="text-muted small">' + req.created_at + '</td>';
-                        tbody.appendChild(tr);
-                    });
-                })
-                .catch(err => {
-                    console.error('Fetch error:', err);
-                    document.getElementById('bankCommunityRequests').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load requests.</td></tr>';
-                });
-            }
-            window.addEventListener('load', loadBankCommunityRequests);
-        </script>
 
         <div class="card card-modern border-0 fade-in-up delay-200 mb-4">
             <div class="card-body p-4 p-md-5">

@@ -95,8 +95,8 @@ public class RegisterServlet extends HttpServlet {
 
             db.collection("password_resets").add(tokenData).get(); // wait for execution
 
-            // Dispatch real registration email
-            com.bloodbank.util.EmailService.sendRegistrationOtpEmail(email, otp);
+            // Dispatch real email
+            com.bloodbank.util.EmailService.sendOtpEmail(email, otp);
 
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();

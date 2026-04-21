@@ -87,44 +87,31 @@ public class EmergencyNotificationServlet extends HttpServlet {
 
                 JSONArray notifiedDevices = new JSONArray();
                 List<String> fcmTokens = new ArrayList<>();
-                List<String> donorEmails = new ArrayList<>();
                 LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
                 for (QueryDocumentSnapshot userDoc : usersSnapshot.getDocuments()) {
                     String userId = userDoc.getId();
-                    String userEmail = userDoc.getString("email");
-                    String userCity = userDoc.getString("city");
-                    boolean eligible = false;
 
-                    // A) Location Check (Coordinates or City)
+                    // Check device token
                     DocumentSnapshot tokenDoc = db.collection("device_tokens").document(userId).get().get();
-                    Double devLat = null, devLng = null;
-                    if (tokenDoc.exists()) {
-                        devLat = tokenDoc.getDouble("last_latitude");
-                        devLng = tokenDoc.getDouble("last_longitude");
-                    }
+                    if (!tokenDoc.exists()) continue;
 
-                    if (devLat != null && devLng != null) {
-                        // Haversine distance
-                        double dLat = Math.toRadians(devLat - bankLat);
-                        double dLng = Math.toRadians(devLng - bankLng);
-                        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                                Math.cos(Math.toRadians(bankLat)) * Math.cos(Math.toRadians(devLat)) *
-                                Math.sin(dLng / 2) * Math.sin(dLng / 2);
-                        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                        double distanceKm = 6371 * c;
-                        
-                        if (distanceKm <= radiusKm) {
-                            eligible = true;
-                        }
-                    } else if (userCity != null && userCity.equalsIgnoreCase(bankDoc.getString("city"))) {
-                        // Fallback: Notify anyone in the same city if coordinates are unavailable
-                        eligible = true;
-                    }
+                    Double devLat = tokenDoc.getDouble("last_latitude");
+                    Double devLng = tokenDoc.getDouble("last_longitude");
+                    if (devLat == null || devLng == null) continue;
 
-                    if (eligible) {
-                        // Check donation wait period (3 months)
+                    // Calculate Haversine distance
+                    double dLat = Math.toRadians(devLat - bankLat);
+                    double dLng = Math.toRadians(devLng - bankLng);
+                    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(Math.toRadians(bankLat)) * Math.cos(Math.toRadians(devLat)) *
+                            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    double distanceKm = 6371 * c;
+
+                    if (distanceKm <= radiusKm) {
+                        // Check appointments
                         QuerySnapshot apptSnapshot = db.collection("appointments")
                                 .whereEqualTo("donor_id", userId)
                                 .whereEqualTo("status", "COMPLETED")
@@ -145,31 +132,18 @@ public class EmergencyNotificationServlet extends HttpServlet {
                         }
 
                         if (!hasRecent) {
-                            // Collect for Email
-                            if (userEmail != null && !userEmail.isEmpty()) {
-                                donorEmails.add(userEmail);
-                            }
-                            
-                            // Collect for FCM if token exists
-                            if (tokenDoc.exists()) {
-                                String token = tokenDoc.getString("device_token");
-                                if (token != null && !token.isEmpty()) {
-                                    JSONObject dev = new JSONObject();
-                                    dev.put("userId", userId);
-                                    dev.put("deviceToken", token);
-                                    dev.put("platform", tokenDoc.getString("platform"));
-                                    notifiedDevices.put(dev);
-                                    fcmTokens.add(token);
-                                }
+                            String token = tokenDoc.getString("device_token");
+                            if (token != null && !token.isEmpty()) {
+                                JSONObject dev = new JSONObject();
+                                dev.put("userId", userId);
+                                dev.put("deviceToken", token);
+                                dev.put("platform", tokenDoc.getString("platform"));
+                                dev.put("distanceKm", distanceKm);
+                                notifiedDevices.put(dev);
+                                fcmTokens.add(token);
                             }
                         }
                     }
-                }
-
-                // 📧 Automated Email Broadcast
-                if (!donorEmails.isEmpty()) {
-                    String bankName = (bankDoc.getString("bank_name") != null) ? bankDoc.getString("bank_name") : "Nearby Blood Bank";
-                    com.bloodbank.util.EmailService.sendEmergencyBroadcastEmail(donorEmails, bloodGroup, bankName, message);
                 }
 
                 // 4) Push notification
@@ -186,15 +160,6 @@ public class EmergencyNotificationServlet extends HttpServlet {
                         bankIdParam,
                         bloodGroup
                 );
-
-                // 📧 Notify Admin (Always informed of emergencies)
-                try {
-                    String bankName = (bankDoc.getString("bank_name") != null) ? bankDoc.getString("bank_name") : "Blood Bank";
-                    String bankCity = (bankDoc.getString("city") != null) ? bankDoc.getString("city") : "Unknown";
-                    com.bloodbank.util.EmailService.notifyAdminOfEmergency(bloodGroup, bankName, bankCity, bodyText, "Blood Bank");
-                } catch (Exception e) {
-                    System.err.println("Admin emergency notification failed: " + e.getMessage());
-                }
 
                 result.put("alertId", alertId);
                 result.put("notifiedCount", notifiedDevices.length());

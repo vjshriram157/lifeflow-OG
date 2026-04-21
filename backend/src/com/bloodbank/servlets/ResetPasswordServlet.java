@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@WebServlet("/ResetPasswordServlet")
 public class ResetPasswordServlet extends HttpServlet {
 
     @Override
